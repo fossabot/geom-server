@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active:
+      - ${SPRING_ENV:dev}
+      - ${DB_TYPE:pgsql}
