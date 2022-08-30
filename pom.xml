@@ -27,6 +27,7 @@
     <spring-cloud.version>2021.0.1</spring-cloud.version>
     <hutool.version>5.8.2</hutool.version>
     <jetbrains-annotation.version>23.0.0</jetbrains-annotation.version>
+    <mapstruct.version>1.5.2.Final</mapstruct.version>
     <jdo.version>3.2.1</jdo.version>
     <queryqsl.version>5.0.0</queryqsl.version>
   </properties>
@@ -77,7 +78,16 @@
         <artifactId>annotations</artifactId>
         <version>${jetbrains-annotation.version}</version>
       </dependency>
-      <!--数据库依赖-->
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency><!--数据库依赖-->
       <dependency>
         <groupId>javax.jdo</groupId>
         <artifactId>jdo-api</artifactId>
