@@ -25,8 +25,6 @@ class UserDAOTest {
         .setCipher(BCrypt.hashpw("hello", BCrypt.gensalt()))
         .setNickname("world")
         .setActivateTime(current)
-        .setCreateTime(current)
-        .setUpdateTime(current)
     );
   }
 }
