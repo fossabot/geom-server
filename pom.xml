@@ -27,6 +27,8 @@
     <spring-cloud.version>2021.0.1</spring-cloud.version>
     <hutool.version>5.8.2</hutool.version>
     <jetbrains-annotation.version>23.0.0</jetbrains-annotation.version>
+    <jdo.version>3.2.1</jdo.version>
+    <queryqsl.version>5.0.0</queryqsl.version>
   </properties>
 
   <dependencyManagement>
@@ -74,6 +76,19 @@
         <groupId>org.jetbrains</groupId>
         <artifactId>annotations</artifactId>
         <version>${jetbrains-annotation.version}</version>
+      </dependency>
+      <!--数据库依赖-->
+      <dependency>
+        <groupId>javax.jdo</groupId>
+        <artifactId>jdo-api</artifactId>
+        <version>${jdo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.querydsl</groupId>
+        <artifactId>querydsl-bom</artifactId>
+        <version>${queryqsl.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
       </dependency>
       <!-- SpringBoot 相关依赖 必须放在最后 -->
       <dependency>
