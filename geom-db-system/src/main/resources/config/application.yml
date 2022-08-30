@@ -5,3 +5,6 @@ spring:
       - ${DB_TYPE:pgsql}
   jpa:
     generate-ddl: true
+logging:
+  level:
+    root: info
