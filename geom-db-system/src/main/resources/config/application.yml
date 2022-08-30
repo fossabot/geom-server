@@ -3,3 +3,5 @@ spring:
     active:
       - ${SPRING_ENV:dev}
       - ${DB_TYPE:pgsql}
+  jpa:
+    generate-ddl: true
