@@ -15,17 +15,20 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * 用户 DAO
  * @author xezzon
  */
 @Repository
 public class UserDAOImpl extends QuerydslJpaRepository<UserDO, String> implements UserDAO {
+
   private static final QUserDO Q_USER_DO = QUserDO.userDO;
   @Resource
   private JPAQueryFactory queryFactory;
 
   @Autowired
   public UserDAOImpl(EntityManager entityManager) {
-    super(new JpaMetamodelEntityInformation<>(UserDO.class, entityManager.getMetamodel()), entityManager);
+    super(new JpaMetamodelEntityInformation<>(UserDO.class, entityManager.getMetamodel()),
+        entityManager);
   }
 
   @Override

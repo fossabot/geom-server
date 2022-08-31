@@ -1,5 +1,12 @@
 package indi.xezzon.geom.domain.system;
 
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,9 +15,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * 用户
@@ -30,7 +34,10 @@ public class UserDO {
    */
   @Id
   @Column(name = "id", nullable = false, updatable = false, length = 64)
-  @GenericGenerator(name = "id-generator", strategy = "indi.xezzon.geom.manager.HibernateIdGenerator")
+  @GenericGenerator(
+      name = "id-generator",
+      strategy = "indi.xezzon.geom.manager.HibernateIdGenerator"
+  )
   @GeneratedValue(generator = "id-generator")
   private String id;
 
@@ -53,8 +60,7 @@ public class UserDO {
   private String nickname;
 
   /**
-   * 激活时间
-   * 该时间之前账号不可用
+   * 激活时间 该时间之前账号不可用
    */
   @Column(name = "activate_time", nullable = false)
   private LocalDateTime activateTime;

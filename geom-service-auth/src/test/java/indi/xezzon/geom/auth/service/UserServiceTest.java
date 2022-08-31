@@ -19,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles("test")
 class UserServiceTest {
   @Resource
-  private UserService userService;
+  private transient UserService userService;
   @Resource
-  private UserDAO userDAO;
+  private transient UserDAO userDAO;
 
   @Test
   @Transactional

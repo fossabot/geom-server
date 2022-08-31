@@ -7,15 +7,19 @@ import indi.xezzon.geom.domain.User;
 import indi.xezzon.geom.domain.system.QUserDO;
 import indi.xezzon.tao.exception.BaseException;
 import java.time.LocalDateTime;
-import javax.annotation.Resource;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-  @Resource
-  private UserDAO userDAO;
+  private final transient UserDAO userDAO;
+
+  @Autowired
+  public UserServiceImpl(UserDAO userDAO) {
+    this.userDAO = userDAO;
+  }
 
   @Override
   public User register(@NotNull User user) {

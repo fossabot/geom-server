@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 class UserDAOTest {
 
   @Resource
-  private UserDAO userDAO;
+  private transient UserDAO userDAO;
 
   @Test
   @Transactional
