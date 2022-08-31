@@ -3,6 +3,8 @@ spring:
     active:
       - ${SPRING_ENV:dev}
       - ${DB_TYPE:pgsql}
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
   jpa:
     generate-ddl: true
 logging:
