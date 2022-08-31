@@ -28,7 +28,6 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.querydsl</groupId>
