@@ -11,4 +11,11 @@ public interface UserService {
    * @return ID 昵称
    */
   User register(@NotNull User user);
+
+  /**
+   * 用户登录
+   * @param username 用户名
+   * @param cipher 密码
+   */
+  void login(String username, String cipher);
 }

@@ -1,5 +1,6 @@
 package indi.xezzon.geom.auth.service;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import indi.xezzon.geom.dao.system.UserDAO;
@@ -50,5 +51,32 @@ class UserServiceTest {
     Assertions.assertTrue(BCrypt.checkpw(cipher, existUser.map(UserDO::getCipher).get()));
     /* 测试预期异常 */
     Assertions.assertThrows(BaseException.class, () -> userService.register(user));
+  }
+
+  @Test
+  @Transactional
+  void login() {
+    /* 准备数据 */
+    String username = RandomUtil.randomString(6);
+    String cipher = RandomUtil.randomString(6);
+    User user = new User()
+        .setUsername(username)
+        .setCipher(cipher);
+    userService.register(user);
+    /* 正常流程测试 */
+    userService.login(username, cipher);
+    Assertions.assertTrue(StpUtil.isLogin());
+    /* 预期异常测试 */
+    Assertions.assertThrows(BaseException.class,
+        () -> userService.login(RandomUtil.randomString(6), cipher)
+    );
+    Assertions.assertThrows(BaseException.class,
+        () -> userService.login(username, RandomUtil.randomString(6))
+    );
+    user.setActivateTime(LocalDateTime.now().plusMonths(1));
+    userDAO.save(user);
+    Assertions.assertThrows(BaseException.class,
+        () -> userService.login(username, cipher)
+    );
   }
 }
