@@ -63,4 +63,9 @@ public class UserServiceImpl implements UserService {
 
     StpUtil.login(user.getId());
   }
+
+  @Override
+  public void logout(String userId) {
+    StpUtil.logout(userId);
+  }
 }
