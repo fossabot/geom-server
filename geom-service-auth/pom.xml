@@ -25,5 +25,9 @@
       <groupId>indi.xezzon</groupId>
       <artifactId>geom-db-system</artifactId>
     </dependency>
+    <dependency>
+      <groupId>cn.dev33</groupId>
+      <artifactId>sa-token-spring-boot-starter</artifactId>
+    </dependency>
   </dependencies>
 </project>
