@@ -7,6 +7,8 @@ spring:
     active:
       - ${SPRING_ENV:dev}
       - ${DB_TYPE:pgsql}
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
 logging:
   level:
     root: info
