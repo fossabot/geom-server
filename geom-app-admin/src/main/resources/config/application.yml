@@ -3,3 +3,10 @@ server:
 spring:
   application:
     name: geom-admin
+  profiles:
+    active:
+      - ${SPRING_ENV:dev}
+      - ${DB_TYPE:pgsql}
+logging:
+  level:
+    root: info

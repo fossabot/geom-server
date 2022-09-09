@@ -10,9 +10,6 @@
 
   <modules>
     <module>geom-app-admin</module>
-    <module>geom-db-system</module>
-    <module>geom-service-auth</module>
-    <module>geom-service-open</module>
     <module>geom-common</module>
   </modules>
 
@@ -39,21 +36,6 @@
       <dependency>
         <groupId>indi.xezzon</groupId>
         <artifactId>geom-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>indi.xezzon</groupId>
-        <artifactId>geom-db-system</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>indi.xezzon</groupId>
-        <artifactId>geom-service-auth</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>indi.xezzon</groupId>
-        <artifactId>geom-service-open</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

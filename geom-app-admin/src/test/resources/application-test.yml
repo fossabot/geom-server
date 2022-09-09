@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${PGSQL_URL:localhost:5432/geom}?currentSchema=unit_test
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    generate-ddl: true
+bean:
+  id-generator: snowflake

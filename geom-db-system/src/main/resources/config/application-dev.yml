@@ -1,6 +1,0 @@
-spring:
-  jpa:
-    show-sql: true
-logging:
-  level:
-    indi.xezzon.geom: debug

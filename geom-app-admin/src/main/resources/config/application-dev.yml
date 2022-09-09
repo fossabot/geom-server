@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    generate-ddl: true
+    show-sql: true
+logging:
+  level:
+    indi.xezzon.geom: debug
+bean:
+  id-generator: snowflake
