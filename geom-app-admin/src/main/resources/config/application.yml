@@ -7,6 +7,23 @@ spring:
     active:
       - ${SPRING_ENV:dev}
       - ${DB_TYPE:pgsql}
+  redis:
+    url: redis://${REDIS_URL:localhost:6379}
+    database: ${REDIS_DB:0}
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 3000ms
+  jackson:
+    visibility:
+      ALL: ANY
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: NON_NULL
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
 logging:
