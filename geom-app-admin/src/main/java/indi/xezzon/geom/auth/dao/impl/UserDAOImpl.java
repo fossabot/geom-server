@@ -32,9 +32,9 @@ public class UserDAOImpl extends QuerydslJpaRepository<UserDO, String> implement
   }
 
   @Override
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public void save(User user) {
-    UserDO userDO = UserConvert.INSTANCE.into(user);
+    UserDO userDO = UserConvert.INSTANCE.from(user);
     super.save(userDO);
     user.setId(userDO.getId());
   }

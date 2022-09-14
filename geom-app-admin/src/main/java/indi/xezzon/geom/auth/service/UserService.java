@@ -3,6 +3,9 @@ package indi.xezzon.geom.auth.service;
 import indi.xezzon.geom.domain.User;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author xezzon
+ */
 public interface UserService {
 
   /**

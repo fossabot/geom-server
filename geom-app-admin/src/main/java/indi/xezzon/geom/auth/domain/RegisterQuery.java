@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * @author xezzon
+ */
 @Getter
 @Setter
 @ToString

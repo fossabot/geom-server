@@ -6,6 +6,9 @@ import indi.xezzon.geom.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * @author xezzon
+ */
 @Mapper
 public interface UserConvert {
 
@@ -13,7 +16,7 @@ public interface UserConvert {
 
   User into(UserDO userDO);
 
-  User from(RegisterQuery registerQuery);
+  UserDO from(User user);
 
-  UserDO into(User user);
+  User from(RegisterQuery registerQuery);
 }

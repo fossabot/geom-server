@@ -6,6 +6,7 @@ import org.springframework.validation.BindException;
 
 /**
  * 用户输入参数不符合校验规则
+ * @author xezzon
  */
 public class IllegalParameterException extends ClientException {
 
