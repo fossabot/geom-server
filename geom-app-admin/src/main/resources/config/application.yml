@@ -7,16 +7,7 @@ spring:
     active:
       - ${SPRING_ENV:dev}
       - ${DB_TYPE:pgsql}
-  redis:
-    url: redis://${REDIS_URL:localhost:6379}
-    database: ${REDIS_DB:0}
-    lettuce:
-      pool:
-        max-active: 8
-        max-wait: -1
-        max-idle: 8
-        min-idle: 0
-    timeout: 3000ms
+      - ${CACHE_TYPE:in-memory}
   jackson:
     visibility:
       ALL: ANY
@@ -26,6 +17,10 @@ spring:
     default-property-inclusion: NON_NULL
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
+  jpa:
+    generate-ddl: true
 logging:
   level:
     root: info
+bean:
+  id-generator: snowflake
