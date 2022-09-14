@@ -1,5 +1,6 @@
 package indi.xezzon.geom.auth.domain;
 
+import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,10 +36,10 @@ public class UserDO {
   @Id
   @Column(name = "id", nullable = false, updatable = false, length = 64)
   @GenericGenerator(
-      name = "id-generator",
-      strategy = "indi.xezzon.geom.core.manager.HibernateIdGenerator"
+      name = HibernateIdGenerator.GENERATOR_NAME,
+      strategy = HibernateIdGenerator.GENERATOR_STRATEGY
   )
-  @GeneratedValue(generator = "id-generator")
+  @GeneratedValue(generator = HibernateIdGenerator.GENERATOR_NAME)
   private String id;
 
   /**

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class HibernateIdGenerator implements IdentifierGenerator {
 
+  public static final String GENERATOR_NAME = "id-generator";
+  public static final String GENERATOR_STRATEGY = "indi.xezzon.geom.core.manager.HibernateIdGenerator";
   private final transient IdGenerator idGenerator;
 
   @Autowired
