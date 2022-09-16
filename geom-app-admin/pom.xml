@@ -82,6 +82,37 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+          <image>
+            <name>xezzo-docker.pkg.coding.net/geom/library/${project.artifactId}:${project.version}</name>
+            <publish>true</publish>
+            <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+            <env>
+            </env>
+          </image>
+          <docker>
+            <builderRegistry>
+              <url>https://mirror.ccs.tencentyun.com</url>
+              <username>${env.CODING_ARTIFACTS_USERNAME}</username>
+              <password>${env.CODING_ARTIFACTS_PASSWORD}</password>
+            </builderRegistry>
+            <publishRegistry>
+              <username>${env.CODING_ARTIFACTS_USERNAME}</username>
+              <password>${env.CODING_ARTIFACTS_PASSWORD}</password>
+            </publishRegistry>
+          </docker>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>deploy</phase>
+            <goals>
+              <goal>build-image</goal>
+            </goals>
+            <configuration>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>com.mysema.maven</groupId>
@@ -108,6 +139,14 @@
         <configuration>
           <configFile>./src/main/resources/smart-doc.json</configFile>
         </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>openapi</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

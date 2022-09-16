@@ -135,11 +135,6 @@ under the License.
       <username>xezzon</username>
       <password>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</password>
     </server>
-    <server>
-      <id>coding</id>
-      <username>${env.CODING_ARTIFACTS_USERNAME}</username>
-      <password>${env.CODING_ARTIFACTS_PASSWORD}</password>
-    </server>
   </servers>
 
   <!-- mirrors
@@ -276,17 +271,6 @@ under the License.
           </releases>
           <snapshots>
             <enabled>false</enabled>
-          </snapshots>
-        </repository>
-        <repository>
-          <id>coding</id>
-          <name>coding</name>
-          <url>https://xezzo-maven.pkg.coding.net/repository/tao/central/</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
           </snapshots>
         </repository>
       </repositories>
