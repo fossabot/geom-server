@@ -91,6 +91,11 @@
         <artifactId>sa-token-spring-boot-starter</artifactId>
         <version>${sa-token.version}</version>
       </dependency>
+      <dependency>
+        <groupId>cn.dev33</groupId>
+        <artifactId>sa-token-dao-redis-jackson</artifactId>
+        <version>${sa-token.version}</version>
+      </dependency>
       <!-- SpringBoot 相关依赖 必须放在最后 -->
       <dependency>
         <groupId>org.springframework.boot</groupId>

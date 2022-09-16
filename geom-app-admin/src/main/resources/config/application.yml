@@ -19,6 +19,10 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
   jpa:
     generate-ddl: true
+sa-token:
+  token-name: Authorization
+  token-prefix: Bearer
+  token-style: tik
 logging:
   level:
     root: info

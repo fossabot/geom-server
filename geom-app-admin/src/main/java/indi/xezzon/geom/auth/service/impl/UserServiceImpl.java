@@ -54,6 +54,9 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void login(String username, String cipher) {
+    if (StpUtil.isLogin()) {
+      return;
+    }
     Optional<UserDO> userDO = userDAO.findOne(QUserDO.userDO.username.eq(username));
     User user = userDO.map(UserConvert.INSTANCE::into)
         .orElseThrow(() -> new ClientException("用户名或密码错误"));
