@@ -45,8 +45,9 @@ public class AuthController {
    */
   @PostMapping("/login")
   @LogRecord
-  public void login(@RequestBody LoginQuery query) {
+  public String login(@RequestBody LoginQuery query) {
     userService.login(query.getUsername(), query.getCipher());
+    return StpUtil.getTokenValue();
   }
 
   /**
