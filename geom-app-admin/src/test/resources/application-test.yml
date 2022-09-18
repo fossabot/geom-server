@@ -1,6 +1,3 @@
 spring:
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${PGSQL_URL:localhost:5432/geom}?currentSchema=unit_test
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:tc:postgresql:11-alpine:///databasename

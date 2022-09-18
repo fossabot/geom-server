@@ -62,6 +62,7 @@ class UserServiceTest {
     /* 正常流程测试 */
     userService.login(username, cipher);
     Assertions.assertTrue(StpUtil.isLogin());
+    StpUtil.logout();
     /* 预期异常测试 */
     Assertions.assertThrows(BaseException.class,
         () -> userService.login(RandomUtil.randomString(6), cipher)
