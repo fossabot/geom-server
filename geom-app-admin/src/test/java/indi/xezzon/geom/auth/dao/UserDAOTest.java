@@ -1,5 +1,6 @@
 package indi.xezzon.geom.auth.dao;
 
+import cn.hutool.core.util.RandomUtil;
 import indi.xezzon.geom.auth.domain.QUserDO;
 import indi.xezzon.geom.auth.domain.UserDO;
 import java.time.LocalDateTime;
@@ -21,15 +22,18 @@ class UserDAOTest {
   @Test
   @Transactional
   void save() {
+    String username = RandomUtil.randomString(6);
+    String cipher = RandomUtil.randomString(6);
+    String nickname = RandomUtil.randomString(6);
     UserDO userDO = new UserDO()
-        .setUsername("xezzon")
-        .setCipher("hello")
-        .setNickname("world")
+        .setUsername(username)
+        .setCipher(cipher)
+        .setNickname(nickname)
         .setActivateTime(LocalDateTime.now())
         .setCreateTime(LocalDateTime.now().minusMonths(1));
     userDAO.save(userDO);
 
-    Optional<UserDO> xezzon = userDAO.findOne(QUserDO.userDO.username.eq("xezzon"));
+    Optional<UserDO> xezzon = userDAO.findOne(QUserDO.userDO.username.eq(username));
 
     Assertions.assertTrue(xezzon.isPresent());
     // 创建时间由 JPA 自动生成 手动设置无效
