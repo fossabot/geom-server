@@ -132,8 +132,8 @@ under the License.
     -->
     <server>
       <id>github</id>
-      <username>xezzon</username>
-      <password>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</password>
+      <username>${env.GITHUB_ARTIFACTS_USERNAME}</username>
+      <password>${env.GITHUB_ARTIFACTS_PASSWORD}</password>
     </server>
   </servers>
 
