@@ -8,6 +8,7 @@ import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.service.UserService;
 import indi.xezzon.tao.exception.ClientException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,5 +70,18 @@ public class UserServiceImpl implements UserService {
   @Override
   public void logout(String userId) {
     StpUtil.logout(userId);
+  }
+
+  @Override
+  public boolean checkCipher(String cipher) {
+    String id = StpUtil.getLoginId(null);
+    if (id == null) {
+      return false;
+    }
+    Optional<User> user = userDAO.findById(id);
+    if (user.isEmpty()) {
+      return false;
+    }
+    return BCrypt.checkpw(cipher, user.get().getCipher());
   }
 }
