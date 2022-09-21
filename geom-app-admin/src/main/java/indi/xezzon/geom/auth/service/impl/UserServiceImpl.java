@@ -3,14 +3,11 @@ package indi.xezzon.geom.auth.service.impl;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import indi.xezzon.geom.auth.dao.UserDAO;
-import indi.xezzon.geom.auth.domain.QUserDO;
-import indi.xezzon.geom.auth.domain.UserDO;
-import indi.xezzon.geom.auth.domain.convert.UserConvert;
+import indi.xezzon.geom.auth.domain.QUser;
+import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.service.UserService;
-import indi.xezzon.geom.domain.User;
 import indi.xezzon.tao.exception.ClientException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +28,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public User register(@NotNull User user) {
     String username = user.getUsername();
-    boolean exists = userDAO.exists(QUserDO.userDO.username.eq(username));
+    boolean exists = userDAO.exists(QUser.user.username.eq(username));
     if (exists) {
       throw new ClientException("用户名" + username + "已注册");
     }
@@ -57,8 +54,7 @@ public class UserServiceImpl implements UserService {
     if (StpUtil.isLogin()) {
       return;
     }
-    Optional<UserDO> userDO = userDAO.findOne(QUserDO.userDO.username.eq(username));
-    User user = userDO.map(UserConvert.INSTANCE::into)
+    User user = userDAO.findOne(QUser.user.username.eq(username))
         .orElseThrow(() -> new ClientException("用户名或密码错误"));
     if (!user.isActive()) {
       throw new ClientException("用户被禁用");

@@ -1,6 +1,6 @@
 package indi.xezzon.geom.auth.service;
 
-import indi.xezzon.geom.domain.User;
+import indi.xezzon.geom.auth.domain.User;
 import org.jetbrains.annotations.NotNull;
 
 /**
