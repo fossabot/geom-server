@@ -1,5 +1,6 @@
 package indi.xezzon.geom.auth.adaptor;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import indi.xezzon.geom.auth.domain.LoginQuery;
 import indi.xezzon.geom.auth.domain.RegisterQuery;
@@ -45,9 +46,9 @@ public class AuthController {
    */
   @PostMapping("/login")
   @LogRecord
-  public String login(@RequestBody LoginQuery query) {
+  public SaTokenInfo login(@RequestBody LoginQuery query) {
     userService.login(query.getUsername(), query.getCipher());
-    return StpUtil.getTokenValue();
+    return StpUtil.getTokenInfo();
   }
 
   /**
