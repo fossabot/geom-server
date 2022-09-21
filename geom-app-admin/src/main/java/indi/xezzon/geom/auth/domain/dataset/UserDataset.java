@@ -3,7 +3,7 @@ package indi.xezzon.geom.auth.domain.dataset;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import indi.xezzon.geom.auth.dao.UserDAO;
-import indi.xezzon.geom.auth.domain.UserDO;
+import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.core.domain.AbstractDataset;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
  * @author xezzon
  */
 @Component
-public final class UserDataset extends AbstractDataset<UserDO> {
+public final class UserDataset extends AbstractDataset<User> {
 
-  private static final List<UserDO> DATASET = Collections.emptyList();
+  private static final List<User> DATASET = Collections.emptyList();
 
   @Autowired
   private UserDataset(UserDAO userDAO) {
@@ -28,10 +28,10 @@ public final class UserDataset extends AbstractDataset<UserDO> {
 
 @Component
 @Profile({"dev", "test"})
-final class UserTestDataset extends AbstractDataset<UserDO> {
+final class UserTestDataset extends AbstractDataset<User> {
 
-  private static final List<UserDO> DATASET = List.of(
-      new UserDO()
+  private static final List<User> DATASET = List.of(
+      new User()
           .setId("1")
           .setUsername("test-user")
           .setCipher(BCrypt.hashpw("test@123"))

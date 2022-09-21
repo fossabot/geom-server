@@ -2,6 +2,7 @@ package indi.xezzon.geom.auth.domain;
 
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -28,7 +29,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "system_user")
 @EntityListeners(AuditingEntityListener.class)
-public class UserDO {
+public class User {
 
   /**
    * 用户主键
@@ -79,4 +80,14 @@ public class UserDO {
   @LastModifiedDate
   @Column(name = "update_time", nullable = false)
   private LocalDateTime updateTime;
+
+  /**
+   * @return 账号可用性
+   */
+  public boolean isActive() {
+    if (this.activateTime == null) {
+      return true;
+    }
+    return Objects.compare(LocalDateTime.now(), this.activateTime, LocalDateTime::compareTo) >= 0;
+  }
 }

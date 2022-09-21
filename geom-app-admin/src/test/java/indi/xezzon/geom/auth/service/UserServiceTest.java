@@ -4,9 +4,8 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import indi.xezzon.geom.auth.dao.UserDAO;
-import indi.xezzon.geom.auth.domain.QUserDO;
-import indi.xezzon.geom.auth.domain.UserDO;
-import indi.xezzon.geom.domain.User;
+import indi.xezzon.geom.auth.domain.QUser;
+import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.tao.exception.BaseException;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -42,9 +41,9 @@ class UserServiceTest {
     Assertions.assertNotNull(register.getNickname());
     Assertions.assertNull(register.getCipher());
     /* 测试结果 */
-    Optional<UserDO> existUser = userDAO.findOne(QUserDO.userDO.username.eq(username));
+    Optional<User> existUser = userDAO.findOne(QUser.user.username.eq(username));
     Assertions.assertTrue(existUser.isPresent());
-    Assertions.assertTrue(BCrypt.checkpw(cipher, existUser.map(UserDO::getCipher).get()));
+    Assertions.assertTrue(BCrypt.checkpw(cipher, existUser.map(User::getCipher).get()));
     /* 测试预期异常 */
     Assertions.assertThrows(BaseException.class, () -> userService.register(user));
   }

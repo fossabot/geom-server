@@ -1,8 +1,8 @@
 package indi.xezzon.geom.auth.dao;
 
 import cn.hutool.core.util.RandomUtil;
-import indi.xezzon.geom.auth.domain.QUserDO;
-import indi.xezzon.geom.auth.domain.UserDO;
+import indi.xezzon.geom.auth.domain.QUser;
+import indi.xezzon.geom.auth.domain.User;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.annotation.Resource;
@@ -25,20 +25,20 @@ class UserDAOTest {
     String username = RandomUtil.randomString(6);
     String cipher = RandomUtil.randomString(6);
     String nickname = RandomUtil.randomString(6);
-    UserDO userDO = new UserDO()
+    User user = new User()
         .setUsername(username)
         .setCipher(cipher)
         .setNickname(nickname)
         .setActivateTime(LocalDateTime.now())
         .setCreateTime(LocalDateTime.now().minusMonths(1));
-    userDAO.save(userDO);
+    userDAO.save(user);
 
-    Optional<UserDO> xezzon = userDAO.findOne(QUserDO.userDO.username.eq(username));
+    Optional<User> existUser = userDAO.findOne(QUser.user.username.eq(username));
 
-    Assertions.assertTrue(xezzon.isPresent());
+    Assertions.assertTrue(existUser.isPresent());
     // 创建时间由 JPA 自动生成 手动设置无效
     Assertions.assertTrue(
-        xezzon.map(UserDO::getCreateTime)
+        existUser.map(User::getCreateTime)
             .filter(createTime -> LocalDateTime.now().minusHours(1).compareTo(createTime) < 0)
             .isPresent()
     );
