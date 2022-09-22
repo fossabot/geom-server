@@ -3,6 +3,7 @@ package indi.xezzon.geom.auth.dao;
 import cn.hutool.core.util.RandomUtil;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.annotation.Resource;
@@ -42,5 +43,35 @@ class UserDAOTest {
             .filter(createTime -> LocalDateTime.now().minusHours(1).compareTo(createTime) < 0)
             .isPresent()
     );
+  }
+
+  @Test
+  void update() throws InterruptedException {
+    // 准备数据
+    String username = RandomUtil.randomString(6);
+    String cipher = RandomUtil.randomString(6);
+    String nickname = RandomUtil.randomString(6);
+    LocalDateTime activateTime = LocalDateTime.now();
+    User user = new User()
+        .setUsername(username)
+        .setCipher(cipher)
+        .setNickname(nickname)
+        .setActivateTime(activateTime);
+    userDAO.save(user);
+    // 正常流程
+    Thread.sleep(1000L);
+    String newCipher = RandomUtil.randomString(8);
+    boolean updated = userDAO.update(new User()
+        .setId(user.getId())
+        .setCipher(newCipher)
+    );
+    Assertions.assertTrue(updated);
+    User user1 = userDAO.findOne(QUser.user.username.eq(username)).get();
+    Assertions.assertEquals(newCipher, user1.getCipher());
+    Assertions.assertEquals(nickname, user1.getNickname());
+    Assertions.assertTrue(Duration.between(
+        user.getUpdateTime(),
+        user1.getUpdateTime()
+    ).getSeconds() >= 1);
   }
 }
