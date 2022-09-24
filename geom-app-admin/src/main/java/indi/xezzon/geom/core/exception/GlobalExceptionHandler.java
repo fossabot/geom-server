@@ -5,6 +5,8 @@ import indi.xezzon.tao.domain.Result;
 import indi.xezzon.tao.exception.ClientException;
 import indi.xezzon.tao.exception.ServerException;
 import indi.xezzon.tao.exception.ThirdPartyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+  private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
   private static final String ERROR_MESSAGE = "无法响应您的操作，请稍后重试或联系客服。";
 
@@ -62,6 +66,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(Exception.class)
   @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
   public Result<Void> handleRuntimeException(RuntimeException e) {
+    log.error("非预期异常", e);
     ServerException se = new ServerException(e.getMessage(), e);
     return Result.fail(se.getCode(), ERROR_MESSAGE);
   }
