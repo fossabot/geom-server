@@ -92,4 +92,12 @@ public class UserServiceImpl implements UserService {
         .setId(userId)
     );
   }
+
+  @Override
+  public void forbidUser(String userId, LocalDateTime activateTime) {
+    userDAO.update(new User()
+        .setActivateTime(activateTime)
+        .setId(userId)
+    );
+  }
 }

@@ -5,8 +5,14 @@ import cn.dev33.satoken.stp.StpUtil;
 import indi.xezzon.geom.auth.domain.UpdateCipherQuery;
 import indi.xezzon.geom.auth.service.UserService;
 import indi.xezzon.tao.exception.ClientException;
+import indi.xezzon.tao.logger.LogRecord;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,5 +40,14 @@ public class UserController {
       throw new ClientException("密码错误");
     }
     userService.updateCipher(StpUtil.getLoginId(null), query.getNewCipher());
+  }
+
+  @PutMapping("/{userId}/activate-time/{activateTime}")
+  @LogRecord
+  public void forbidUser(
+      @PathVariable String userId,
+      @PathVariable @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime activateTime
+  ) {
+    userService.forbidUser(userId, activateTime);
   }
 }

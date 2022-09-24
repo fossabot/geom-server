@@ -1,6 +1,7 @@
 package indi.xezzon.geom.auth.service;
 
 import indi.xezzon.geom.auth.domain.User;
+import java.time.LocalDateTime;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -41,4 +42,11 @@ public interface UserService {
    * @param cipher 新密码
    */
   void updateCipher(String userId, String cipher);
+
+  /**
+   * 禁用用户
+   * @param userId 用户ID
+   * @param activateTime 禁用至
+   */
+  void forbidUser(String userId, LocalDateTime activateTime);
 }
