@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 认证接口
+ * @author xezzon
  */
 @RestController
 @RequestMapping
