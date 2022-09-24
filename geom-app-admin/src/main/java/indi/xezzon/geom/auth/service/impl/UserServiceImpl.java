@@ -84,4 +84,12 @@ public class UserServiceImpl implements UserService {
     }
     return BCrypt.checkpw(cipher, user.get().getCipher());
   }
+
+  @Override
+  public void updateCipher(String userId, String cipher) {
+    userDAO.update(new User()
+        .setCipher(BCrypt.hashpw(cipher, BCrypt.gensalt()))
+        .setId(userId)
+    );
+  }
 }

@@ -34,4 +34,11 @@ public interface UserService {
    * @return 用户输入的密码是否正确
    */
   boolean checkCipher(String cipher);
+
+  /**
+   * 修改密码
+   * @param userId 用户ID
+   * @param cipher 新密码
+   */
+  void updateCipher(String userId, String cipher);
 }
