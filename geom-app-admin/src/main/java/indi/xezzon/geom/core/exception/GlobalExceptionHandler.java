@@ -1,5 +1,6 @@
 package indi.xezzon.geom.core.exception;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import indi.xezzon.tao.domain.Result;
 import indi.xezzon.tao.exception.ClientException;
 import indi.xezzon.tao.exception.ServerException;
@@ -63,5 +64,12 @@ public class GlobalExceptionHandler {
   public Result<Void> handleRuntimeException(RuntimeException e) {
     ServerException se = new ServerException(e.getMessage(), e);
     return Result.fail(se.getCode(), ERROR_MESSAGE);
+  }
+
+  @ExceptionHandler(NotLoginException.class)
+  @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+  public Result<Void> handleNotLoginException(NotLoginException e) {
+    UnauthorizedException ue = new UnauthorizedException(e);
+    return Result.fail(ue.getCode(), ue.getMessage());
   }
 }
