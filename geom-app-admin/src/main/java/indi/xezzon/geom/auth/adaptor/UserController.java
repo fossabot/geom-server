@@ -32,6 +32,9 @@ public class UserController {
     this.userService = userService;
   }
 
+  /**
+   * 修改密码
+   */
   @PatchMapping("/cipher")
   @SaCheckLogin
   public void updateCipher(@RequestBody UpdateCipherQuery query) {
@@ -42,6 +45,11 @@ public class UserController {
     userService.updateCipher(StpUtil.getLoginId(null), query.getNewCipher());
   }
 
+  /**
+   * 禁用用户
+   * @param userId 用户ID
+   * @param activateTime 禁用至
+   */
   @PutMapping("/{userId}/activate-time/{activateTime}")
   @LogRecord
   public void forbidUser(
