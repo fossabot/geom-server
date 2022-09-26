@@ -5,8 +5,10 @@ import cn.hutool.crypto.digest.BCrypt;
 import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
+import indi.xezzon.geom.auth.observation.UserRegisterObservation;
 import indi.xezzon.geom.auth.service.UserService;
 import indi.xezzon.tao.exception.ClientException;
+import indi.xezzon.tao.observer.ObserverContext;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +46,12 @@ public class UserServiceImpl implements UserService {
     user.setCipher(BCrypt.hashpw(user.getCipher(), BCrypt.gensalt()));
 
     userDAO.save(user);
+    /* 后置操作 */
+    ObserverContext.post(new UserRegisterObservation(
+        user.getId(),
+        user.getUsername(),
+        user.getNickname()
+    ));
 
     return new User()
         .setId(user.getId())
