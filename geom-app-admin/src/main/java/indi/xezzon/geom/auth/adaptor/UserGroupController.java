@@ -25,6 +25,9 @@ public class UserGroupController {
     this.userGroupService = userGroupService;
   }
 
+  /**
+   * @param userGroup 用户组信息 包括编码与名称
+   */
   @PostMapping("")
   public void add(@RequestBody UserGroup userGroup) {
     userGroupService.insert(userGroup);
