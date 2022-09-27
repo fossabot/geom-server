@@ -36,6 +36,12 @@ final class UserTestDataset extends AbstractDataset<User> {
           .setUsername("test-user")
           .setCipher(BCrypt.hashpw("test@123"))
           .setNickname(RandomUtil.randomString(6))
+          .setActivateTime(LocalDateTime.now()),
+      new User()
+          .setId("2")
+          .setUsername("test-user-2")
+          .setCipher(BCrypt.hashpw("test@456"))
+          .setNickname(RandomUtil.randomString(6))
           .setActivateTime(LocalDateTime.now())
   );
 
