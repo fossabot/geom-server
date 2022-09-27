@@ -12,4 +12,18 @@ public interface UserGroupService {
    * @param userGroup 用户组信息
    */
   void insert(UserGroup userGroup);
+
+  /**
+   * 转让用户组所有权
+   * @param groupId 被转让的用户组
+   * @param userId 受转让的用户
+   */
+  void transfer(String groupId, String userId);
+
+  /**
+   * 根据主键查询用户组信息
+   * @param id 用户组主键
+   * @return 用户组信息 未查到记录则返回null
+   */
+  UserGroup getById(String id);
 }

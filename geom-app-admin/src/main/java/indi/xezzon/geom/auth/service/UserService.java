@@ -49,4 +49,11 @@ public interface UserService {
    * @param activateTime 禁用至
    */
   void forbidUser(String userId, LocalDateTime activateTime);
+
+  /**
+   * 根据用户主键获取用户信息
+   * @param id 用户主键
+   * @return 用户信息 找不到记录时返回null
+   */
+  User getById(String id);
 }

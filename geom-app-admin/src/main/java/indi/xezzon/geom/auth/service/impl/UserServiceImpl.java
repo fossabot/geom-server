@@ -108,4 +108,9 @@ public class UserServiceImpl implements UserService {
         .setId(userId)
     );
   }
+
+  @Override
+  public User getById(String id) {
+    return userDAO.findById(id).orElse(null);
+  }
 }
