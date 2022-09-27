@@ -89,4 +89,19 @@ class UserServiceTest {
     User user1 = userDAO.findById(user.getId()).get();
     Assertions.assertTrue(BCrypt.checkpw(newCipher, user1.getCipher()));
   }
+
+  @Test
+  void forbidUser() {
+    /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setCipher(RandomUtil.randomString(15));
+    userService.register(user);
+    /* 正常流程 */
+    Assertions.assertDoesNotThrow(
+        () -> userService.forbidUser(user.getId(), LocalDateTime.now().plusMonths(1))
+    );
+    User user1 = userDAO.findById(user.getId()).get();
+    Assertions.assertFalse(user1.isActive());
+  }
 }
