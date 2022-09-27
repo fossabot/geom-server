@@ -75,4 +75,18 @@ class UserServiceTest {
         () -> userService.login(username, cipher)
     );
   }
+
+  @Test
+  void updateCipher() {
+    /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setCipher(RandomUtil.randomString(15));
+    userService.register(user);
+    /* 正常流程 */
+    String newCipher = RandomUtil.randomString(15);
+    Assertions.assertDoesNotThrow(() -> userService.updateCipher(user.getId(), newCipher));
+    User user1 = userDAO.findById(user.getId()).get();
+    Assertions.assertTrue(BCrypt.checkpw(newCipher, user1.getCipher()));
+  }
 }
