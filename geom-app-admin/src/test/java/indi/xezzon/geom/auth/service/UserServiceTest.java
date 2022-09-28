@@ -7,6 +7,7 @@ import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.tao.exception.BaseException;
+import indi.xezzon.tao.exception.ClientException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.annotation.Resource;
@@ -28,12 +29,10 @@ class UserServiceTest {
   @Test
   @Transactional
   void register() {
-    final String username = RandomUtil.randomString(6);
-    final String cipher = RandomUtil.randomString(6);
     User user = new User();
-    user.setUsername(username);
+    user.setUsername(RandomUtil.randomString(6));
     user.setNickname(RandomUtil.randomString(6));
-    user.setCipher(cipher);
+    user.setPlaintext(RandomUtil.randomString(6));
     user.setCreateTime(LocalDateTime.now().minusMonths(1));
     User register = userService.register(user);
     /* 测试返回值 */
@@ -41,9 +40,11 @@ class UserServiceTest {
     Assertions.assertNotNull(register.getNickname());
     Assertions.assertNull(register.getCipher());
     /* 测试结果 */
-    Optional<User> existUser = userDAO.findOne(QUser.user.username.eq(username));
+    Optional<User> existUser = userDAO.findOne(QUser.user.username.eq(user.getUsername()));
     Assertions.assertTrue(existUser.isPresent());
-    Assertions.assertTrue(BCrypt.checkpw(cipher, existUser.map(User::getCipher).get()));
+    Assertions.assertTrue(
+        BCrypt.checkpw(user.getPlaintext(), existUser.get().getCipher())
+    );
     /* 测试预期异常 */
     Assertions.assertThrows(BaseException.class, () -> userService.register(user));
   }
@@ -52,27 +53,25 @@ class UserServiceTest {
   @Transactional
   void login() {
     /* 准备数据 */
-    String username = RandomUtil.randomString(6);
-    String cipher = RandomUtil.randomString(6);
     User user = new User()
-        .setUsername(username)
-        .setCipher(cipher);
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(6));
     userService.register(user);
     /* 正常流程测试 */
-    userService.login(username, cipher);
+    userService.login(user.getUsername(), user.getPlaintext());
     Assertions.assertTrue(StpUtil.isLogin());
     StpUtil.logout();
     /* 预期异常测试 */
     Assertions.assertThrows(BaseException.class,
-        () -> userService.login(RandomUtil.randomString(6), cipher)
+        () -> userService.login(RandomUtil.randomString(6), user.getPlaintext())
     );
     Assertions.assertThrows(BaseException.class,
-        () -> userService.login(username, RandomUtil.randomString(6))
+        () -> userService.login(user.getUsername(), RandomUtil.randomString(6))
     );
     user.setActivateTime(LocalDateTime.now().plusMonths(1));
     userDAO.save(user);
     Assertions.assertThrows(BaseException.class,
-        () -> userService.login(username, cipher)
+        () -> userService.login(user.getUsername(), user.getPlaintext())
     );
   }
 
@@ -81,7 +80,7 @@ class UserServiceTest {
     /* 数据准备 */
     User user = new User()
         .setUsername(RandomUtil.randomString(6))
-        .setCipher(RandomUtil.randomString(15));
+        .setPlaintext(RandomUtil.randomString(15));
     userService.register(user);
     /* 正常流程 */
     String newCipher = RandomUtil.randomString(15);
@@ -95,7 +94,7 @@ class UserServiceTest {
     /* 数据准备 */
     User user = new User()
         .setUsername(RandomUtil.randomString(6))
-        .setCipher(RandomUtil.randomString(15));
+        .setPlaintext(RandomUtil.randomString(15));
     userService.register(user);
     /* 正常流程 */
     Assertions.assertDoesNotThrow(
@@ -103,5 +102,39 @@ class UserServiceTest {
     );
     User user1 = userDAO.findById(user.getId()).get();
     Assertions.assertFalse(user1.isActive());
+  }
+
+  @Test
+  void testForbidUser() {
+    /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(15));
+    userService.register(user);
+    /* 正常流程 */
+    Assertions.assertDoesNotThrow(
+        () -> userService.login(user.getUsername(), user.getPlaintext())
+    );
+    /* 预期异常 */
+    // 禁用用户
+    userService.forbidUser(user.getId(), LocalDateTime.now().plusMonths(1));
+    Assertions.assertThrows(ClientException.class,
+        () -> userService.login(user.getUsername(), user.getPlaintext())
+    );
+  }
+
+  @Test
+  void checkCipher() {
+    /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(15));
+    userService.register(user);
+    /* 正常流程 */
+    StpUtil.login(user.getId());
+    Assertions.assertTrue(userService.checkCipher(user.getPlaintext()));
+    Assertions.assertFalse(userService.checkCipher(RandomUtil.randomString(6)));
+    userService.logout(user.getId());
+    Assertions.assertFalse(userService.checkCipher(user.getPlaintext()));
   }
 }

@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
       user.setActivateTime(LocalDateTime.now());
     }
     user.setId(null);
-    user.setCipher(BCrypt.hashpw(user.getCipher(), BCrypt.gensalt()));
 
     userDAO.save(user);
     /* 后置操作 */
@@ -96,17 +95,22 @@ public class UserServiceImpl implements UserService {
   @Override
   public void updateCipher(String userId, String cipher) {
     userDAO.update(new User()
-        .setCipher(BCrypt.hashpw(cipher, BCrypt.gensalt()))
+        .setPlaintext(cipher)
         .setId(userId)
     );
   }
 
   @Override
-  public void forbidUser(String userId, LocalDateTime activateTime) {
+  public void forbidUser(String userId, @NotNull LocalDateTime activateTime) {
     userDAO.update(new User()
         .setActivateTime(activateTime)
         .setId(userId)
     );
+    /* 后置处理 */
+    // 若禁用时间大于当前时间 将该账号踢下线
+    if (activateTime.compareTo(LocalDateTime.now()) > 0) {
+      StpUtil.logout(userId);
+    }
   }
 
   @Override
