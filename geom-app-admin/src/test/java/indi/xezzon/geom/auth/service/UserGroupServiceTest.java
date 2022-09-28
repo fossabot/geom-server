@@ -62,27 +62,32 @@ class UserGroupServiceTest {
 
   @Test
   void transfer() {
+    final String userId = "1";
+    final String userId1 = "2";
     /* 数据准备 */
     UserGroup userGroup = new UserGroup()
         .setCode(RandomUtil.randomString(6))
         .setName(RandomUtil.randomString(6));
     userGroupService.insert(userGroup);
     /* 正常流程 */
-    Assertions.assertDoesNotThrow(() -> userGroupService.transfer(userGroup.getId(), "2"));
+    Assertions.assertDoesNotThrow(() -> userGroupService.transfer(userGroup.getId(), userId1));
     UserGroup userGroup1 = userGroupDAO.findById(userGroup.getId()).get();
-    Assertions.assertEquals("2", userGroup1.getOwnerId());
+    Assertions.assertEquals(userId1, userGroup1.getOwnerId());
     userGroupMemberDAO.findOne(
         QUserGroupMember.userGroupMember.groupId.eq(userGroup.getId())
-            .and(QUserGroupMember.userGroupMember.userId.eq("1"))
+            .and(QUserGroupMember.userGroupMember.userId.eq(userId))
     );
     /* 预期异常 */
+    // 无权转让
     Assertions.assertThrows(ClientException.class,
-        () -> userGroupService.transfer(userGroup.getId(), "1")
+        () -> userGroupService.transfer(userGroup.getId(), userId)
     );
-    StpUtil.switchTo("2");
+    StpUtil.switchTo(userId1);
+    // 用户组不存在
     Assertions.assertThrows(ClientException.class,
-        () -> userGroupService.transfer(RandomUtil.randomString(6), "1")
+        () -> userGroupService.transfer(RandomUtil.randomString(6), userId)
     );
+    // 受转让者不存在
     Assertions.assertThrows(ClientException.class,
         () -> userGroupService.transfer(userGroup.getId(), RandomUtil.randomString(6))
     );
