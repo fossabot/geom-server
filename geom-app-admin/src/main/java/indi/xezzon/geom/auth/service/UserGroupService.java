@@ -26,4 +26,18 @@ public interface UserGroupService {
    * @return 用户组信息 未查到记录则返回null
    */
   UserGroup getById(String id);
+
+  /**
+   * 用户组添加成员
+   * @param groupId 用户组主键
+   * @param userId 用户主键
+   */
+  void addMember(String groupId, String userId);
+
+  /**
+   * 用户组移除成员
+   * @param groupId 用户组主键
+   * @param userId 用户主键
+   */
+  void removeMember(String groupId, String userId);
 }

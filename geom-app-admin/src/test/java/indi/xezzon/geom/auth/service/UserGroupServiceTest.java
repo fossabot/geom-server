@@ -3,7 +3,9 @@ package indi.xezzon.geom.auth.service;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import indi.xezzon.geom.auth.dao.UserGroupDAO;
+import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.QUserGroup;
+import indi.xezzon.geom.auth.domain.QUserGroupMember;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.tao.exception.ClientException;
@@ -25,6 +27,8 @@ class UserGroupServiceTest {
   private transient UserGroupDAO userGroupDAO;
   @Resource
   private transient UserService userService;
+  @Resource
+  private transient UserGroupMemberDAO userGroupMemberDAO;
 
   @BeforeEach
   void setUp() {
@@ -58,25 +62,91 @@ class UserGroupServiceTest {
 
   @Test
   void transfer() {
+    final String userId = "1";
+    final String userId1 = "2";
     /* 数据准备 */
     UserGroup userGroup = new UserGroup()
         .setCode(RandomUtil.randomString(6))
         .setName(RandomUtil.randomString(6));
     userGroupService.insert(userGroup);
     /* 正常流程 */
-    Assertions.assertDoesNotThrow(() -> userGroupService.transfer(userGroup.getId(), "2"));
+    Assertions.assertDoesNotThrow(() -> userGroupService.transfer(userGroup.getId(), userId1));
     UserGroup userGroup1 = userGroupDAO.findById(userGroup.getId()).get();
-    Assertions.assertEquals("2", userGroup1.getOwnerId());
+    Assertions.assertEquals(userId1, userGroup1.getOwnerId());
+    userGroupMemberDAO.findOne(
+        QUserGroupMember.userGroupMember.groupId.eq(userGroup.getId())
+            .and(QUserGroupMember.userGroupMember.userId.eq(userId))
+    );
     /* 预期异常 */
+    // 无权转让
     Assertions.assertThrows(ClientException.class,
-        () -> userGroupService.transfer(userGroup.getId(), "1")
+        () -> userGroupService.transfer(userGroup.getId(), userId)
     );
-    StpUtil.switchTo("2");
+    StpUtil.switchTo(userId1);
+    // 用户组不存在
     Assertions.assertThrows(ClientException.class,
-        () -> userGroupService.transfer(RandomUtil.randomString(6), "1")
+        () -> userGroupService.transfer(RandomUtil.randomString(6), userId)
     );
+    // 受转让者不存在
     Assertions.assertThrows(ClientException.class,
         () -> userGroupService.transfer(userGroup.getId(), RandomUtil.randomString(6))
+    );
+    StpUtil.endSwitch();
+  }
+
+  @Test
+  void addMember() {
+    /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setCipher(RandomUtil.randomString(15));
+    userService.register(user);
+    UserGroup userGroup = new UserGroup()
+        .setCode(RandomUtil.randomString(6))
+        .setName(RandomUtil.randomString(6));
+    userGroupService.insert(userGroup);
+    /* 正常流程 */
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.addMember(userGroup.getId(), user.getId())
+    );
+    // 重复添加
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.addMember(userGroup.getId(), user.getId())
+    );
+  }
+
+  @Test
+  void removeMember() {
+    final String userId = "1";
+    /* 数据准备 */
+    User user = new User()
+        .setId(RandomUtil.randomString(6))
+        .setUsername(RandomUtil.randomString(6))
+        .setCipher(RandomUtil.randomString(6));
+    userService.register(user);
+    StpUtil.switchTo(user.getId());
+    UserGroup userGroup = new UserGroup()
+        .setCode(RandomUtil.randomString(6))
+        .setName(RandomUtil.randomString(6));
+    userGroupService.insert(userGroup);
+    StpUtil.login(user.getId());
+    userGroupService.addMember(userGroup.getId(), userId);
+    /* 正常流程 */
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.removeMember(userGroup.getId(), userId)
+    );
+    // 重复删除
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.removeMember(userGroup.getId(), userId)
+    );
+    /* 预期异常 */
+    // 用户组不存在
+    Assertions.assertThrows(ClientException.class,
+        () -> userGroupService.removeMember(RandomUtil.randomString(6), userId)
+    );
+    // 移除所有者
+    Assertions.assertThrows(ClientException.class,
+        () -> userGroupService.removeMember(userGroup.getId(), user.getId())
     );
     StpUtil.endSwitch();
   }

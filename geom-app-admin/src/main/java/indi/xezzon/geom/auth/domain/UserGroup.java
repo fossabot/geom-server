@@ -1,11 +1,13 @@
 package indi.xezzon.geom.auth.domain;
 
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -50,4 +52,7 @@ public class UserGroup {
    */
   @Column(name = "owner_id", nullable = false, length = 32)
   private String ownerId;
+
+  @Transient
+  private Set<UserGroupMember> members;
 }
