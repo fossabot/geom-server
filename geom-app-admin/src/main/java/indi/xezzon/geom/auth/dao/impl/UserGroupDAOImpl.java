@@ -31,7 +31,7 @@ public class UserGroupDAOImpl
 
   private static final QUserGroup Q_USER_GROUP_DO = QUserGroup.userGroup;
   @Resource
-  private JPAQueryFactory queryFactory;
+  private transient JPAQueryFactory queryFactory;
 
   @Autowired
   public UserGroupDAOImpl(EntityManager entityManager) {

@@ -31,7 +31,7 @@ public class UserDAOImpl extends QuerydslJpaRepository<User, String> implements 
 
   private static final QUser Q_USER_DO = QUser.user;
   @Resource
-  private JPAQueryFactory queryFactory;
+  private transient JPAQueryFactory queryFactory;
 
   @Autowired
   public UserDAOImpl(EntityManager entityManager) {

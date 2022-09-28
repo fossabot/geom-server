@@ -21,7 +21,7 @@ public class UserGroupMemberDAOImpl
 
   private static final QUserGroupMember Q_USER_GROUP_MEMBER = QUserGroupMember.userGroupMember;
   @Resource
-  private JPAQueryFactory queryFactory;
+  private transient JPAQueryFactory queryFactory;
 
   @Autowired
   public UserGroupMemberDAOImpl(EntityManager entityManager) {
