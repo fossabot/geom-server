@@ -2,9 +2,12 @@ package indi.xezzon.geom.auth.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import indi.xezzon.geom.auth.dao.UserGroupDAO;
+import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.QUserGroup;
+import indi.xezzon.geom.auth.domain.QUserGroupMember;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.domain.UserGroup;
+import indi.xezzon.geom.auth.domain.UserGroupMember;
 import indi.xezzon.geom.auth.observation.UserRegisterObservation;
 import indi.xezzon.geom.auth.service.UserGroupService;
 import indi.xezzon.geom.auth.service.UserService;
@@ -21,13 +24,16 @@ import org.springframework.stereotype.Service;
 public class UserGroupServiceImpl implements UserGroupService {
 
   private final transient UserGroupDAO userGroupDAO;
+  private final transient UserGroupMemberDAO userGroupMemberDAO;
   private final transient UserService userService;
 
   public UserGroupServiceImpl(
       UserGroupDAO userGroupDAO,
+      UserGroupMemberDAO userGroupMemberDAO,
       UserService userService
   ) {
     this.userGroupDAO = userGroupDAO;
+    this.userGroupMemberDAO = userGroupMemberDAO;
     this.userService = userService;
   }
 
@@ -59,6 +65,9 @@ public class UserGroupServiceImpl implements UserGroupService {
     userGroup.setId(null)
         .setOwnerId(StpUtil.getLoginId(null));
     userGroupDAO.save(userGroup);
+    /* 后置操作 */
+    // 将owner添加到成员列表
+    this.addMember(userGroup.getId(), userGroup.getOwnerId());
   }
 
   @Override
@@ -88,5 +97,22 @@ public class UserGroupServiceImpl implements UserGroupService {
   @Override
   public UserGroup getById(String id) {
     return userGroupDAO.findById(id).orElse(null);
+  }
+
+  @Override
+  public void addMember(String groupId, String userId) {
+    final QUserGroupMember qUserGroupMember = QUserGroupMember.userGroupMember;
+    boolean exists = userGroupMemberDAO.exists(
+        qUserGroupMember.groupId.eq(groupId)
+            .and(qUserGroupMember.userId.eq(userId))
+    );
+    if (exists) {
+      // 用户已在用户组中直接返回
+      return;
+    }
+    userGroupMemberDAO.save(new UserGroupMember()
+        .setGroupId(groupId)
+        .setUserId(userId)
+    );
   }
 }

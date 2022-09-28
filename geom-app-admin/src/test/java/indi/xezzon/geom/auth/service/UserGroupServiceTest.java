@@ -3,7 +3,9 @@ package indi.xezzon.geom.auth.service;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import indi.xezzon.geom.auth.dao.UserGroupDAO;
+import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.QUserGroup;
+import indi.xezzon.geom.auth.domain.QUserGroupMember;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.tao.exception.ClientException;
@@ -25,6 +27,8 @@ class UserGroupServiceTest {
   private transient UserGroupDAO userGroupDAO;
   @Resource
   private transient UserService userService;
+  @Resource
+  private transient UserGroupMemberDAO userGroupMemberDAO;
 
   @BeforeEach
   void setUp() {
@@ -67,6 +71,10 @@ class UserGroupServiceTest {
     Assertions.assertDoesNotThrow(() -> userGroupService.transfer(userGroup.getId(), "2"));
     UserGroup userGroup1 = userGroupDAO.findById(userGroup.getId()).get();
     Assertions.assertEquals("2", userGroup1.getOwnerId());
+    userGroupMemberDAO.findOne(
+        QUserGroupMember.userGroupMember.groupId.eq(userGroup.getId())
+            .and(QUserGroupMember.userGroupMember.userId.eq("1"))
+    );
     /* 预期异常 */
     Assertions.assertThrows(ClientException.class,
         () -> userGroupService.transfer(userGroup.getId(), "1")
@@ -79,5 +87,26 @@ class UserGroupServiceTest {
         () -> userGroupService.transfer(userGroup.getId(), RandomUtil.randomString(6))
     );
     StpUtil.endSwitch();
+  }
+
+  @Test
+  void addMember() {
+    /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setCipher(RandomUtil.randomString(15));
+    userService.register(user);
+    UserGroup userGroup = new UserGroup()
+        .setCode(RandomUtil.randomString(6))
+        .setName(RandomUtil.randomString(6));
+    userGroupService.insert(userGroup);
+    /* 正常流程 */
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.addMember(userGroup.getId(), user.getId())
+    );
+    // 重复添加
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.addMember(userGroup.getId(), user.getId())
+    );
   }
 }

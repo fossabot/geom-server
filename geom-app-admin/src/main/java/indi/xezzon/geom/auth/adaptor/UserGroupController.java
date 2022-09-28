@@ -40,4 +40,14 @@ public class UserGroupController {
   public void transfer(@PathVariable String groupId, @PathVariable String userId) {
     userGroupService.transfer(groupId, userId);
   }
+
+  /**
+   * 用户组添加成员
+   * @param groupId 用户组主键
+   * @param userId 用户主键
+   */
+  @PostMapping("/{groupId}/member/{userId}")
+  public void enroll(@PathVariable String groupId, @PathVariable String userId) {
+    userGroupService.addMember(groupId, userId);
+  }
 }
