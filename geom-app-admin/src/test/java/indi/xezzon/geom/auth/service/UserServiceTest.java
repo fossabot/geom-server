@@ -6,16 +6,19 @@ import cn.hutool.crypto.digest.BCrypt;
 import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
+import indi.xezzon.geom.auth.domain.dataset.UserTestDataset;
 import indi.xezzon.tao.exception.BaseException;
 import indi.xezzon.tao.exception.ClientException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -25,15 +28,21 @@ class UserServiceTest {
   private transient UserService userService;
   @Resource
   private transient UserDAO userDAO;
+  private final transient User currentUser = UserTestDataset.find(Objects::nonNull);
+
+  @BeforeEach
+  void setUp() {
+
+  }
 
   @Test
   @Transactional
   void register() {
-    User user = new User();
-    user.setUsername(RandomUtil.randomString(6));
-    user.setNickname(RandomUtil.randomString(6));
-    user.setPlaintext(RandomUtil.randomString(6));
-    user.setCreateTime(LocalDateTime.now().minusMonths(1));
+    User user = new User()
+      .setUsername(RandomUtil.randomString(6))
+      .setNickname(RandomUtil.randomString(6))
+      .setPlaintext(RandomUtil.randomString(6))
+      .setCreateTime(LocalDateTime.now().minusMonths(1));
     User register = userService.register(user);
     /* 测试返回值 */
     Assertions.assertNotNull(register.getId());
@@ -52,89 +61,59 @@ class UserServiceTest {
   @Test
   @Transactional
   void login() {
-    /* 准备数据 */
-    User user = new User()
-        .setUsername(RandomUtil.randomString(6))
-        .setPlaintext(RandomUtil.randomString(6));
-    userService.register(user);
     /* 正常流程测试 */
-    userService.login(user.getUsername(), user.getPlaintext());
+    userService.login(currentUser.getUsername(), currentUser.getPlaintext());
     Assertions.assertTrue(StpUtil.isLogin());
     StpUtil.logout();
     /* 预期异常测试 */
     Assertions.assertThrows(BaseException.class,
-        () -> userService.login(RandomUtil.randomString(6), user.getPlaintext())
+        () -> userService.login(RandomUtil.randomString(6), currentUser.getPlaintext())
     );
     Assertions.assertThrows(BaseException.class,
-        () -> userService.login(user.getUsername(), RandomUtil.randomString(6))
+        () -> userService.login(currentUser.getUsername(), RandomUtil.randomString(6))
     );
-    user.setActivateTime(LocalDateTime.now().plusMonths(1));
-    userDAO.save(user);
+    currentUser.setActivateTime(LocalDateTime.now().plusMonths(1));
+    userDAO.save(currentUser);
     Assertions.assertThrows(BaseException.class,
-        () -> userService.login(user.getUsername(), user.getPlaintext())
+        () -> userService.login(currentUser.getUsername(), currentUser.getPlaintext())
     );
   }
 
   @Test
+  @Transactional
   void updateCipher() {
-    /* 数据准备 */
-    User user = new User()
-        .setUsername(RandomUtil.randomString(6))
-        .setPlaintext(RandomUtil.randomString(15));
-    userService.register(user);
     /* 正常流程 */
     String newCipher = RandomUtil.randomString(15);
-    Assertions.assertDoesNotThrow(() -> userService.updateCipher(user.getId(), newCipher));
-    User user1 = userDAO.findById(user.getId()).get();
+    Assertions.assertDoesNotThrow(() -> userService.updateCipher(currentUser.getId(), newCipher));
+    User user1 = userDAO.findById(currentUser.getId()).get();
     Assertions.assertTrue(BCrypt.checkpw(newCipher, user1.getCipher()));
   }
 
   @Test
+  @Transactional
   void forbidUser() {
-    /* 数据准备 */
-    User user = new User()
-        .setUsername(RandomUtil.randomString(6))
-        .setPlaintext(RandomUtil.randomString(15));
-    userService.register(user);
     /* 正常流程 */
     Assertions.assertDoesNotThrow(
-        () -> userService.forbidUser(user.getId(), LocalDateTime.now().plusMonths(1))
+        () -> userService.forbidUser(currentUser.getId(), LocalDateTime.now().plusMonths(1))
     );
-    User user1 = userDAO.findById(user.getId()).get();
+    User user1 = userDAO.findById(currentUser.getId()).get();
     Assertions.assertFalse(user1.isActive());
-  }
-
-  @Test
-  void testForbidUser() {
-    /* 数据准备 */
-    User user = new User()
-        .setUsername(RandomUtil.randomString(6))
-        .setPlaintext(RandomUtil.randomString(15));
-    userService.register(user);
-    /* 正常流程 */
-    Assertions.assertDoesNotThrow(
-        () -> userService.login(user.getUsername(), user.getPlaintext())
-    );
     /* 预期异常 */
     // 禁用用户
-    userService.forbidUser(user.getId(), LocalDateTime.now().plusMonths(1));
+    userService.forbidUser(currentUser.getId(), LocalDateTime.now().plusMonths(1));
     Assertions.assertThrows(ClientException.class,
-        () -> userService.login(user.getUsername(), user.getPlaintext())
+        () -> userService.login(currentUser.getUsername(), currentUser.getPlaintext())
     );
   }
 
   @Test
+  @Transactional
   void checkCipher() {
-    /* 数据准备 */
-    User user = new User()
-        .setUsername(RandomUtil.randomString(6))
-        .setPlaintext(RandomUtil.randomString(15));
-    userService.register(user);
     /* 正常流程 */
-    StpUtil.login(user.getId());
-    Assertions.assertTrue(userService.checkCipher(user.getPlaintext()));
+    StpUtil.login(currentUser.getId());
+    Assertions.assertTrue(userService.checkCipher(currentUser.getPlaintext()));
     Assertions.assertFalse(userService.checkCipher(RandomUtil.randomString(6)));
-    userService.logout(user.getId());
-    Assertions.assertFalse(userService.checkCipher(user.getPlaintext()));
+    userService.logout(currentUser.getId());
+    Assertions.assertFalse(userService.checkCipher(currentUser.getPlaintext()));
   }
 }

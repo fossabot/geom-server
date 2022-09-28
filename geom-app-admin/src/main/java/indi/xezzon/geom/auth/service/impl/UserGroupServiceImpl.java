@@ -74,14 +74,12 @@ public class UserGroupServiceImpl implements UserGroupService {
   @Override
   public void transfer(String groupId, String userId) {
     /* 前置校验 */
-    UserGroup userGroup = this.getById(groupId);
-    User user = userService.getById(userId);
-    if (userGroup == null) {
-      throw new ClientException("用户组不存在");
-    }
+    UserGroup userGroup = userGroupDAO.findById(groupId)
+        .orElseThrow(() -> new ClientException("用户组不存在"));
     if (!Objects.equals(userGroup.getOwnerId(), StpUtil.getLoginId())) {
       throw new ClientException("无权转让该用户组");
     }
+    final User user = userService.getById(userId);
     if (user == null) {
       throw new ClientException("用户不存在");
     }
@@ -89,10 +87,8 @@ public class UserGroupServiceImpl implements UserGroupService {
       throw new ClientException("无法转让给该用户");
     }
 
-    userGroupDAO.update(new UserGroup()
-        .setId(groupId)
-        .setOwnerId(userId)
-    );
+    // 持久化态数据模型更新时会直接修改数据库
+    userGroup.setOwnerId(userId);
   }
 
   @Override

@@ -147,7 +147,7 @@
         </configuration>
         <executions>
           <execution>
-            <phase>compile</phase>
+            <phase>package</phase>
             <goals>
               <goal>openapi</goal>
             </goals>

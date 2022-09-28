@@ -5,12 +5,15 @@ import cn.hutool.core.util.RandomUtil;
 import indi.xezzon.geom.auth.dao.UserGroupDAO;
 import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.QUserGroup;
-import indi.xezzon.geom.auth.domain.QUserGroupMember;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.domain.UserGroup;
+import indi.xezzon.geom.auth.domain.dataset.UserGroupTestDataset;
+import indi.xezzon.geom.auth.domain.dataset.UserTestDataset;
 import indi.xezzon.tao.exception.ClientException;
+import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,13 +32,15 @@ class UserGroupServiceTest {
   private transient UserService userService;
   @Resource
   private transient UserGroupMemberDAO userGroupMemberDAO;
+  private final transient User currentUser = UserTestDataset.find(Objects::nonNull);
 
   @BeforeEach
   void setUp() {
-    userService.login("test-user", "test@123");
+    userService.login(currentUser.getUsername(), currentUser.getPlaintext());
   }
 
   @Test
+  @Transactional
   void insert() {
     UserGroup userGroup = new UserGroup()
         .setCode(RandomUtil.randomString(6))
@@ -46,6 +51,7 @@ class UserGroupServiceTest {
   }
 
   @Test
+  @Transactional
   void handleUserRegisterObservation() {
     User user = new User()
         .setUsername(RandomUtil.randomString(6))
@@ -59,36 +65,30 @@ class UserGroupServiceTest {
   }
 
   @Test
+  @Transactional
   void transfer() {
-    final String userId = StpUtil.getLoginId(null);
     /* 数据准备 */
-    User user = new User()
-        .setUsername(RandomUtil.randomString(6))
-        .setPlaintext(RandomUtil.randomString(15));
-    userService.register(user);
-    UserGroup userGroup = new UserGroup()
-        .setCode(RandomUtil.randomString(6))
-        .setName(RandomUtil.randomString(6));
-    userGroupService.insert(userGroup);
+    final User receiver = UserTestDataset.find(
+        (user) -> !Objects.equals(user.getId(), currentUser.getId())
+    );
+    final UserGroup userGroup = UserGroupTestDataset.find(
+        (o) -> Objects.equals(o.getOwnerId(), currentUser.getId())
+    );
     /* 正常流程 */
     Assertions.assertDoesNotThrow(
-        () -> userGroupService.transfer(userGroup.getId(), user.getId())
+        () -> userGroupService.transfer(userGroup.getId(), receiver.getId())
     );
     UserGroup userGroup1 = userGroupDAO.findById(userGroup.getId()).get();
-    Assertions.assertEquals(user.getId(), userGroup1.getOwnerId());
-    userGroupMemberDAO.findOne(
-        QUserGroupMember.userGroupMember.groupId.eq(userGroup.getId())
-            .and(QUserGroupMember.userGroupMember.userId.eq(userId))
-    );
+    Assertions.assertEquals(receiver.getId(), userGroup1.getOwnerId());
     /* 预期异常 */
     // 无权转让
     Assertions.assertThrows(ClientException.class,
-        () -> userGroupService.transfer(userGroup.getId(), userId)
+        () -> userGroupService.transfer(userGroup.getId(), currentUser.getId())
     );
-    StpUtil.switchTo(user.getId());
+    StpUtil.switchTo(receiver.getId());
     // 用户组不存在
     Assertions.assertThrows(ClientException.class,
-        () -> userGroupService.transfer(RandomUtil.randomString(6), userId)
+        () -> userGroupService.transfer(RandomUtil.randomString(6), currentUser.getId())
     );
     // 受转让者不存在
     Assertions.assertThrows(ClientException.class,
@@ -98,59 +98,50 @@ class UserGroupServiceTest {
   }
 
   @Test
+  @Transactional
   void addMember() {
     /* 数据准备 */
-    User user = new User()
-        .setUsername(RandomUtil.randomString(6))
-        .setPlaintext(RandomUtil.randomString(15));
-    userService.register(user);
-    UserGroup userGroup = new UserGroup()
-        .setCode(RandomUtil.randomString(6))
-        .setName(RandomUtil.randomString(6));
-    userGroupService.insert(userGroup);
+    final User member = UserTestDataset.find(
+        (user) -> !Objects.equals(user.getId(), currentUser.getId())
+    );
+    final UserGroup userGroup = UserGroupTestDataset.find(Objects::nonNull);
     /* 正常流程 */
     Assertions.assertDoesNotThrow(
-        () -> userGroupService.addMember(userGroup.getId(), user.getId())
+        () -> userGroupService.addMember(userGroup.getId(), member.getId())
     );
     // 重复添加
     Assertions.assertDoesNotThrow(
-        () -> userGroupService.addMember(userGroup.getId(), user.getId())
+        () -> userGroupService.addMember(userGroup.getId(), member.getId())
     );
   }
 
   @Test
+  @Transactional
   void removeMember() {
-    final String userId = "1";
     /* 数据准备 */
-    User user = new User()
-        .setId(RandomUtil.randomString(6))
-        .setUsername(RandomUtil.randomString(6))
-        .setPlaintext(RandomUtil.randomString(6));
-    userService.register(user);
-    StpUtil.switchTo(user.getId());
-    UserGroup userGroup = new UserGroup()
-        .setCode(RandomUtil.randomString(6))
-        .setName(RandomUtil.randomString(6));
-    userGroupService.insert(userGroup);
-    StpUtil.login(user.getId());
-    userGroupService.addMember(userGroup.getId(), userId);
+    final UserGroup userGroup = UserGroupTestDataset.find(
+        (o) -> Objects.equals(o.getOwnerId(), currentUser.getId())
+    );
+    final User member = UserTestDataset.find(
+        (o) -> !Objects.equals(o.getId(), currentUser.getId())
+    );
+    userGroupService.addMember(userGroup.getId(), member.getId());
     /* 正常流程 */
     Assertions.assertDoesNotThrow(
-        () -> userGroupService.removeMember(userGroup.getId(), userId)
+        () -> userGroupService.removeMember(userGroup.getId(), member.getId())
     );
     // 重复删除
     Assertions.assertDoesNotThrow(
-        () -> userGroupService.removeMember(userGroup.getId(), userId)
+        () -> userGroupService.removeMember(userGroup.getId(), member.getId())
     );
     /* 预期异常 */
     // 用户组不存在
     Assertions.assertThrows(ClientException.class,
-        () -> userGroupService.removeMember(RandomUtil.randomString(6), userId)
+        () -> userGroupService.removeMember(RandomUtil.randomString(6), member.getId())
     );
     // 移除所有者
     Assertions.assertThrows(ClientException.class,
-        () -> userGroupService.removeMember(userGroup.getId(), user.getId())
+        () -> userGroupService.removeMember(userGroup.getId(), currentUser.getId())
     );
-    StpUtil.endSwitch();
   }
 }

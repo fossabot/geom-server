@@ -7,7 +7,9 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 /**
  * @author xezzon
  */
-public interface UserGroupDAO extends JpaRepository<UserGroup, String>, QuerydslPredicateExecutor<UserGroup> {
+public interface UserGroupDAO
+    extends JpaRepository<UserGroup, String>,
+    QuerydslPredicateExecutor<UserGroup> {
 
   /**
    * 局部更新用户组信息
