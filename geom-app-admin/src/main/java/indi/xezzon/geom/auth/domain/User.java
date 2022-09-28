@@ -1,5 +1,6 @@
 package indi.xezzon.geom.auth.domain;
 
+import cn.hutool.crypto.digest.BCrypt;
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,6 +10,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -50,9 +53,16 @@ public class User {
   private String username;
 
   /**
-   * 密码
+   * 密码明文
+   */
+  @Transient
+  private String plaintext;
+
+  /**
+   * 密码密文
    */
   @Column(name = "cipher", nullable = false)
+  @Setter(AccessLevel.PRIVATE)
   private String cipher;
 
   /**
@@ -80,6 +90,12 @@ public class User {
   @LastModifiedDate
   @Column(name = "update_time", nullable = false)
   private LocalDateTime updateTime;
+
+  public User setPlaintext(String plaintext) {
+    this.plaintext = plaintext;
+    this.cipher = BCrypt.hashpw(plaintext, BCrypt.gensalt());
+    return this;
+  }
 
   /**
    * @return 账号可用性

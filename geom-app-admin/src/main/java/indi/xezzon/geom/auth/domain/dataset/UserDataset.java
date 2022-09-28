@@ -1,7 +1,6 @@
 package indi.xezzon.geom.auth.domain.dataset;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.crypto.digest.BCrypt;
 import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.core.domain.AbstractDataset;
@@ -34,13 +33,13 @@ final class UserTestDataset extends AbstractDataset<User> {
       new User()
           .setId("1")
           .setUsername("test-user")
-          .setCipher(BCrypt.hashpw("test@123"))
+          .setPlaintext("test@123")
           .setNickname(RandomUtil.randomString(6))
           .setActivateTime(LocalDateTime.now()),
       new User()
           .setId("2")
           .setUsername("test-user-2")
-          .setCipher(BCrypt.hashpw("test@456"))
+          .setPlaintext("test@456")
           .setNickname(RandomUtil.randomString(6))
           .setActivateTime(LocalDateTime.now())
   );

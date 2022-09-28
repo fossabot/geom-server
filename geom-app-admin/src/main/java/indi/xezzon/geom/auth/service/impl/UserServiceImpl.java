@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
       user.setActivateTime(LocalDateTime.now());
     }
     user.setId(null);
-    user.setCipher(BCrypt.hashpw(user.getCipher(), BCrypt.gensalt()));
 
     userDAO.save(user);
     /* 后置操作 */
@@ -96,7 +95,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public void updateCipher(String userId, String cipher) {
     userDAO.update(new User()
-        .setCipher(BCrypt.hashpw(cipher, BCrypt.gensalt()))
+        .setPlaintext(cipher)
         .setId(userId)
     );
   }

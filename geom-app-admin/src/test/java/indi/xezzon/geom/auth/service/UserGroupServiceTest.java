@@ -53,7 +53,7 @@ class UserGroupServiceTest {
     String cipher = RandomUtil.randomString(6);
     User register = userService.register(new User()
         .setUsername(username)
-        .setCipher(cipher)
+        .setPlaintext(cipher)
     );
     Optional<UserGroup> userGroup = userGroupDAO.findOne(QUserGroup.userGroup.code.eq(username));
     Assertions.assertTrue(userGroup.isPresent());
@@ -99,7 +99,7 @@ class UserGroupServiceTest {
     /* 数据准备 */
     User user = new User()
         .setUsername(RandomUtil.randomString(6))
-        .setCipher(RandomUtil.randomString(15));
+        .setPlaintext(RandomUtil.randomString(15));
     userService.register(user);
     UserGroup userGroup = new UserGroup()
         .setCode(RandomUtil.randomString(6))
@@ -122,7 +122,7 @@ class UserGroupServiceTest {
     User user = new User()
         .setId(RandomUtil.randomString(6))
         .setUsername(RandomUtil.randomString(6))
-        .setCipher(RandomUtil.randomString(6));
+        .setPlaintext(RandomUtil.randomString(6));
     userService.register(user);
     StpUtil.switchTo(user.getId());
     UserGroup userGroup = new UserGroup()

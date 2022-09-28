@@ -28,7 +28,7 @@ class UserDAOTest {
     String nickname = RandomUtil.randomString(6);
     User user = new User()
         .setUsername(username)
-        .setCipher(cipher)
+        .setPlaintext(cipher)
         .setNickname(nickname)
         .setActivateTime(LocalDateTime.now())
         .setCreateTime(LocalDateTime.now().minusMonths(1));
@@ -54,7 +54,7 @@ class UserDAOTest {
     LocalDateTime activateTime = LocalDateTime.now();
     User user = new User()
         .setUsername(username)
-        .setCipher(cipher)
+        .setPlaintext(cipher)
         .setNickname(nickname)
         .setActivateTime(activateTime);
     userDAO.save(user);
@@ -63,11 +63,10 @@ class UserDAOTest {
     String newCipher = RandomUtil.randomString(8);
     boolean updated = userDAO.update(new User()
         .setId(user.getId())
-        .setCipher(newCipher)
+        .setPlaintext(newCipher)
     );
     Assertions.assertTrue(updated);
     User user1 = userDAO.findOne(QUser.user.username.eq(username)).get();
-    Assertions.assertEquals(newCipher, user1.getCipher());
     Assertions.assertEquals(nickname, user1.getNickname());
     Assertions.assertTrue(Duration.between(
         user.getUpdateTime(),

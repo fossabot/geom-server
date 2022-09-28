@@ -33,7 +33,7 @@ class UserServiceTest {
     User user = new User();
     user.setUsername(username);
     user.setNickname(RandomUtil.randomString(6));
-    user.setCipher(cipher);
+    user.setPlaintext(cipher);
     user.setCreateTime(LocalDateTime.now().minusMonths(1));
     User register = userService.register(user);
     /* 测试返回值 */
@@ -56,7 +56,7 @@ class UserServiceTest {
     String cipher = RandomUtil.randomString(6);
     User user = new User()
         .setUsername(username)
-        .setCipher(cipher);
+        .setPlaintext(cipher);
     userService.register(user);
     /* 正常流程测试 */
     userService.login(username, cipher);
@@ -81,7 +81,7 @@ class UserServiceTest {
     /* 数据准备 */
     User user = new User()
         .setUsername(RandomUtil.randomString(6))
-        .setCipher(RandomUtil.randomString(15));
+        .setPlaintext(RandomUtil.randomString(15));
     userService.register(user);
     /* 正常流程 */
     String newCipher = RandomUtil.randomString(15);
@@ -95,7 +95,7 @@ class UserServiceTest {
     /* 数据准备 */
     User user = new User()
         .setUsername(RandomUtil.randomString(6))
-        .setCipher(RandomUtil.randomString(15));
+        .setPlaintext(RandomUtil.randomString(15));
     userService.register(user);
     /* 正常流程 */
     Assertions.assertDoesNotThrow(
