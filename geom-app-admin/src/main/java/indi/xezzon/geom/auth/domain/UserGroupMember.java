@@ -3,6 +3,7 @@ package indi.xezzon.geom.auth.domain;
 import static indi.xezzon.geom.auth.domain.UserGroupMember.GROUP_ID;
 import static indi.xezzon.geom.auth.domain.UserGroupMember.USER_ID;
 
+import indi.xezzon.geom.auth.constant.DatabaseConstant;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,19 +42,19 @@ public class UserGroupMember {
    * 用户组成员主键
    */
   @Id
-  @Column(name = "id", nullable = false, updatable = false, length = 64)
+  @Column(name = "id", nullable = false, updatable = false, length = DatabaseConstant.ID_LENGTH)
   @GenericGenerator(name = "uuid", strategy = "uuid")
   @GeneratedValue(generator = "uuid")
   private String id;
   /**
    * 用户组主键
    */
-  @Column(name = GROUP_ID, nullable = false, updatable = false, length = 64)
+  @Column(name = GROUP_ID, nullable = false, updatable = false, length = DatabaseConstant.ID_LENGTH)
   private String groupId;
   /**
    * 用户主键
    */
-  @Column(name = USER_ID, nullable = false, updatable = false, length = 64)
+  @Column(name = USER_ID, nullable = false, updatable = false, length = DatabaseConstant.ID_LENGTH)
   private String userId;
 
   /**

@@ -1,5 +1,6 @@
 package indi.xezzon.geom.auth.domain;
 
+import indi.xezzon.geom.auth.constant.DatabaseConstant;
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.util.Set;
 import javax.persistence.Column;
@@ -40,7 +41,7 @@ public class UserGroup {
   /**
    * 用户组编码
    */
-  @Column(name = "code", nullable = false, unique = true, length = 32)
+  @Column(name = "code", nullable = false, unique = true)
   private String code;
   /**
    * 用户组名称
@@ -50,7 +51,7 @@ public class UserGroup {
   /**
    * 所属用户ID
    */
-  @Column(name = "owner_id", nullable = false, length = 32)
+  @Column(name = "owner_id", nullable = false, length = DatabaseConstant.ID_LENGTH)
   private String ownerId;
 
   @Transient

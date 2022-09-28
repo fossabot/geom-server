@@ -1,6 +1,7 @@
 package indi.xezzon.geom.auth.domain;
 
 import cn.hutool.crypto.digest.BCrypt;
+import indi.xezzon.geom.auth.constant.DatabaseConstant;
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public class User {
    * 用户主键
    */
   @Id
-  @Column(name = "id", nullable = false, updatable = false, length = 64)
+  @Column(name = "id", nullable = false, updatable = false, length = DatabaseConstant.ID_LENGTH)
   @GenericGenerator(
       name = HibernateIdGenerator.GENERATOR_NAME,
       strategy = HibernateIdGenerator.GENERATOR_STRATEGY
@@ -49,7 +50,7 @@ public class User {
   /**
    * 用户名
    */
-  @Column(name = "username", nullable = false, unique = true, length = 32)
+  @Column(name = "username", nullable = false, unique = true)
   private String username;
 
   /**
