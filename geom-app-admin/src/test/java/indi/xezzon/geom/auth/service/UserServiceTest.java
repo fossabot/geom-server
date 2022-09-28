@@ -7,6 +7,7 @@ import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.tao.exception.BaseException;
+import indi.xezzon.tao.exception.ClientException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.annotation.Resource;
@@ -103,5 +104,24 @@ class UserServiceTest {
     );
     User user1 = userDAO.findById(user.getId()).get();
     Assertions.assertFalse(user1.isActive());
+  }
+
+  @Test
+  void testForbidUser() {
+    /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(15));
+    userService.register(user);
+    /* 正常流程 */
+    Assertions.assertDoesNotThrow(
+        () -> userService.login(user.getUsername(), user.getPlaintext())
+    );
+    /* 预期异常 */
+    // 禁用用户
+    userService.forbidUser(user.getId(), LocalDateTime.now().plusMonths(1));
+    Assertions.assertThrows(ClientException.class,
+        () -> userService.login(user.getUsername(), user.getPlaintext())
+    );
   }
 }
