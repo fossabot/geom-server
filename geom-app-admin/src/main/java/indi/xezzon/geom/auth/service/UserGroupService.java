@@ -33,4 +33,11 @@ public interface UserGroupService {
    * @param userId 用户主键
    */
   void addMember(String groupId, String userId);
+
+  /**
+   * 用户组移除成员
+   * @param groupId 用户组主键
+   * @param userId 用户主键
+   */
+  void removeMember(String groupId, String userId);
 }

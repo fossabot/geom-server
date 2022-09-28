@@ -3,6 +3,7 @@ package indi.xezzon.geom.auth.adaptor;
 import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.service.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,5 +50,15 @@ public class UserGroupController {
   @PostMapping("/{groupId}/member/{userId}")
   public void enroll(@PathVariable String groupId, @PathVariable String userId) {
     userGroupService.addMember(groupId, userId);
+  }
+
+  /**
+   * 用户组移除成员
+   * @param groupId 用户组主键
+   * @param userId 用户主键
+   */
+  @DeleteMapping("/{groupId}/member/{userId}")
+  public void dismiss(@PathVariable String groupId, @PathVariable String userId) {
+    userGroupService.removeMember(groupId, userId);
   }
 }

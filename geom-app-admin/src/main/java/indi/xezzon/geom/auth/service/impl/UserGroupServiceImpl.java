@@ -14,6 +14,7 @@ import indi.xezzon.geom.auth.service.UserService;
 import indi.xezzon.tao.exception.ClientException;
 import indi.xezzon.tao.observer.ObserverContext;
 import java.util.Objects;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
@@ -113,6 +114,23 @@ public class UserGroupServiceImpl implements UserGroupService {
     userGroupMemberDAO.save(new UserGroupMember()
         .setGroupId(groupId)
         .setUserId(userId)
+    );
+  }
+
+  @Override
+  public void removeMember(String groupId, String userId) {
+    /* 前置校验 */
+    Optional<UserGroup> userGroup = userGroupDAO.findById(groupId);
+    if (userGroup.isEmpty()) {
+      throw new ClientException("用户组不存在");
+    }
+    if (Objects.equals(userGroup.get().getOwnerId(), userId)) {
+      throw new ClientException("无法移除所有者");
+    }
+
+    userGroupMemberDAO.delete(
+        QUserGroupMember.userGroupMember.groupId.eq(groupId)
+            .and(QUserGroupMember.userGroupMember.userId.eq(userId))
     );
   }
 }

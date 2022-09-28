@@ -114,4 +114,40 @@ class UserGroupServiceTest {
         () -> userGroupService.addMember(userGroup.getId(), user.getId())
     );
   }
+
+  @Test
+  void removeMember() {
+    final String userId = "1";
+    /* 数据准备 */
+    User user = new User()
+        .setId(RandomUtil.randomString(6))
+        .setUsername(RandomUtil.randomString(6))
+        .setCipher(RandomUtil.randomString(6));
+    userService.register(user);
+    StpUtil.switchTo(user.getId());
+    UserGroup userGroup = new UserGroup()
+        .setCode(RandomUtil.randomString(6))
+        .setName(RandomUtil.randomString(6));
+    userGroupService.insert(userGroup);
+    StpUtil.login(user.getId());
+    userGroupService.addMember(userGroup.getId(), userId);
+    /* 正常流程 */
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.removeMember(userGroup.getId(), userId)
+    );
+    // 重复删除
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.removeMember(userGroup.getId(), userId)
+    );
+    /* 预期异常 */
+    // 用户组不存在
+    Assertions.assertThrows(ClientException.class,
+        () -> userGroupService.removeMember(RandomUtil.randomString(6), userId)
+    );
+    // 移除所有者
+    Assertions.assertThrows(ClientException.class,
+        () -> userGroupService.removeMember(userGroup.getId(), user.getId())
+    );
+    StpUtil.endSwitch();
+  }
 }
