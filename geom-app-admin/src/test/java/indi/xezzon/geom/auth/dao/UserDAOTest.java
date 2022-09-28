@@ -23,18 +23,15 @@ class UserDAOTest {
   @Test
   @Transactional
   void save() {
-    String username = RandomUtil.randomString(6);
-    String cipher = RandomUtil.randomString(6);
-    String nickname = RandomUtil.randomString(6);
     User user = new User()
-        .setUsername(username)
-        .setPlaintext(cipher)
-        .setNickname(nickname)
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(6))
+        .setNickname(RandomUtil.randomString(6))
         .setActivateTime(LocalDateTime.now())
         .setCreateTime(LocalDateTime.now().minusMonths(1));
     userDAO.save(user);
 
-    Optional<User> existUser = userDAO.findOne(QUser.user.username.eq(username));
+    Optional<User> existUser = userDAO.findOne(QUser.user.username.eq(user.getUsername()));
 
     Assertions.assertTrue(existUser.isPresent());
     // 创建时间由 JPA 自动生成 手动设置无效
@@ -48,15 +45,11 @@ class UserDAOTest {
   @Test
   void update() throws InterruptedException {
     // 准备数据
-    String username = RandomUtil.randomString(6);
-    String cipher = RandomUtil.randomString(6);
-    String nickname = RandomUtil.randomString(6);
-    LocalDateTime activateTime = LocalDateTime.now();
     User user = new User()
-        .setUsername(username)
-        .setPlaintext(cipher)
-        .setNickname(nickname)
-        .setActivateTime(activateTime);
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(6))
+        .setNickname(RandomUtil.randomString(6))
+        .setActivateTime(LocalDateTime.now());
     userDAO.save(user);
     // 正常流程
     Thread.sleep(1000L);
@@ -66,8 +59,8 @@ class UserDAOTest {
         .setPlaintext(newCipher)
     );
     Assertions.assertTrue(updated);
-    User user1 = userDAO.findOne(QUser.user.username.eq(username)).get();
-    Assertions.assertEquals(nickname, user1.getNickname());
+    User user1 = userDAO.findOne(QUser.user.username.eq(user.getUsername())).get();
+    Assertions.assertEquals(user.getNickname(), user1.getNickname());
     Assertions.assertTrue(Duration.between(
         user.getUpdateTime(),
         user1.getUpdateTime()

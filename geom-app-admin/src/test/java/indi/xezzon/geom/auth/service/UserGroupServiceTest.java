@@ -37,11 +37,9 @@ class UserGroupServiceTest {
 
   @Test
   void insert() {
-    String code = RandomUtil.randomString(6);
-    String name = RandomUtil.randomString(6);
     UserGroup userGroup = new UserGroup()
-        .setCode(code)
-        .setName(name);
+        .setCode(RandomUtil.randomString(6))
+        .setName(RandomUtil.randomString(6));
     userGroupService.insert(userGroup);
     UserGroup userGroup1 = userGroupDAO.getById(userGroup.getId());
     Assertions.assertNotNull(userGroup1);
@@ -49,30 +47,35 @@ class UserGroupServiceTest {
 
   @Test
   void handleUserRegisterObservation() {
-    String username = RandomUtil.randomString(6);
-    String cipher = RandomUtil.randomString(6);
-    User register = userService.register(new User()
-        .setUsername(username)
-        .setPlaintext(cipher)
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(6));
+    User register = userService.register(user);
+    Optional<UserGroup> userGroup = userGroupDAO.findOne(
+        QUserGroup.userGroup.code.eq(user.getUsername())
     );
-    Optional<UserGroup> userGroup = userGroupDAO.findOne(QUserGroup.userGroup.code.eq(username));
     Assertions.assertTrue(userGroup.isPresent());
     Assertions.assertEquals(register.getId(), userGroup.get().getOwnerId());
   }
 
   @Test
   void transfer() {
-    final String userId = "1";
-    final String userId1 = "2";
+    final String userId = StpUtil.getLoginId(null);
     /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(15));
+    userService.register(user);
     UserGroup userGroup = new UserGroup()
         .setCode(RandomUtil.randomString(6))
         .setName(RandomUtil.randomString(6));
     userGroupService.insert(userGroup);
     /* 正常流程 */
-    Assertions.assertDoesNotThrow(() -> userGroupService.transfer(userGroup.getId(), userId1));
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.transfer(userGroup.getId(), user.getId())
+    );
     UserGroup userGroup1 = userGroupDAO.findById(userGroup.getId()).get();
-    Assertions.assertEquals(userId1, userGroup1.getOwnerId());
+    Assertions.assertEquals(user.getId(), userGroup1.getOwnerId());
     userGroupMemberDAO.findOne(
         QUserGroupMember.userGroupMember.groupId.eq(userGroup.getId())
             .and(QUserGroupMember.userGroupMember.userId.eq(userId))
@@ -82,7 +85,7 @@ class UserGroupServiceTest {
     Assertions.assertThrows(ClientException.class,
         () -> userGroupService.transfer(userGroup.getId(), userId)
     );
-    StpUtil.switchTo(userId1);
+    StpUtil.switchTo(user.getId());
     // 用户组不存在
     Assertions.assertThrows(ClientException.class,
         () -> userGroupService.transfer(RandomUtil.randomString(6), userId)
