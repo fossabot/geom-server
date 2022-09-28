@@ -124,4 +124,19 @@ class UserServiceTest {
         () -> userService.login(user.getUsername(), user.getPlaintext())
     );
   }
+
+  @Test
+  void checkCipher() {
+    /* 数据准备 */
+    User user = new User()
+        .setUsername(RandomUtil.randomString(6))
+        .setPlaintext(RandomUtil.randomString(15));
+    userService.register(user);
+    /* 正常流程 */
+    StpUtil.login(user.getId());
+    Assertions.assertTrue(userService.checkCipher(user.getPlaintext()));
+    Assertions.assertFalse(userService.checkCipher(RandomUtil.randomString(6)));
+    userService.logout(user.getId());
+    Assertions.assertFalse(userService.checkCipher(user.getPlaintext()));
+  }
 }
