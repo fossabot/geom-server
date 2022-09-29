@@ -2,11 +2,9 @@ package indi.xezzon.geom.auth.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.digest.BCrypt;
-import indi.xezzon.geom.auth.constant.SessionConstant;
 import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
-import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.observation.UserRegisterObservation;
 import indi.xezzon.geom.auth.service.UserGroupService;
 import indi.xezzon.geom.auth.service.UserService;
@@ -83,8 +81,7 @@ public class UserServiceImpl implements UserService {
     StpUtil.login(user.getId());
     /* 后置操作 */
     // 保存当前用户组
-    UserGroup userGroup = userGroupService.getByCode(user.getUsername());
-    StpUtil.getTokenSession().set(SessionConstant.CURRENT_GROUP, userGroup);
+    userGroupService.switchGroup(user.getUsername());
   }
 
   @Override

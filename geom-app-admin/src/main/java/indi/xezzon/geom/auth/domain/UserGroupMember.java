@@ -4,6 +4,7 @@ import static indi.xezzon.geom.auth.domain.UserGroupMember.GROUP_ID;
 import static indi.xezzon.geom.auth.domain.UserGroupMember.USER_ID;
 
 import indi.xezzon.geom.auth.constant.DatabaseConstant;
+import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,8 +44,11 @@ public class UserGroupMember {
    */
   @Id
   @Column(name = "id", nullable = false, updatable = false, length = DatabaseConstant.ID_LENGTH)
-  @GenericGenerator(name = "uuid", strategy = "uuid")
-  @GeneratedValue(generator = "uuid")
+  @GenericGenerator(
+      name = HibernateIdGenerator.GENERATOR_NAME,
+      strategy = HibernateIdGenerator.GENERATOR_STRATEGY
+  )
+  @GeneratedValue(generator = HibernateIdGenerator.GENERATOR_NAME)
   private String id;
   /**
    * 用户组主键
