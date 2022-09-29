@@ -16,6 +16,7 @@ import indi.xezzon.tao.observer.ObserverContext;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,7 +32,7 @@ public class UserGroupServiceImpl implements UserGroupService {
   public UserGroupServiceImpl(
       UserGroupDAO userGroupDAO,
       UserGroupMemberDAO userGroupMemberDAO,
-      UserService userService
+      @Lazy UserService userService
   ) {
     this.userGroupDAO = userGroupDAO;
     this.userGroupMemberDAO = userGroupMemberDAO;
@@ -128,5 +129,12 @@ public class UserGroupServiceImpl implements UserGroupService {
         QUserGroupMember.userGroupMember.groupId.eq(groupId)
             .and(QUserGroupMember.userGroupMember.userId.eq(userId))
     );
+  }
+
+  @Override
+  public UserGroup getByCode(String code) {
+    return userGroupDAO.findOne(
+        QUserGroup.userGroup.code.eq(code)
+    ).orElse(null);
   }
 }

@@ -19,12 +19,12 @@ public final class UserGroupTestDataset extends AbstractDataset<UserGroup> {
   private static final List<UserGroup> DATASET = List.of(
       new UserGroup()
           .setId("1")
-          .setCode("test-group")
+          .setCode("test-user")
           .setName("test-group-name")
           .setOwnerId("1"),
       new UserGroup()
           .setId("2")
-          .setCode("test-group-2")
+          .setCode("test-user-2")
           .setName("test-group-name-2")
           .setOwnerId("2")
   );

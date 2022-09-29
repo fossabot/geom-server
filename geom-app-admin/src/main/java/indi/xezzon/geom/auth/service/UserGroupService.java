@@ -40,4 +40,11 @@ public interface UserGroupService {
    * @param userId 用户主键
    */
   void removeMember(String groupId, String userId);
+
+  /**
+   * 根据用户组编码搜索
+   * @param code 用户组编码
+   * @return 用户组信息 未找到则返回null
+   */
+  UserGroup getByCode(String code);
 }
