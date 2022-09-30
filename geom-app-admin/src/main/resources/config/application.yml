@@ -26,3 +26,4 @@ logging:
     root: info
 bean:
   id-generator: snowflake
+  sa-token-dao: default
