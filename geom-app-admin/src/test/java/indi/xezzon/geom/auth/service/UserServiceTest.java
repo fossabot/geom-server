@@ -9,7 +9,7 @@ import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.domain.UserGroup;
-import indi.xezzon.geom.auth.domain.dataset.UserTestDataset;
+import indi.xezzon.geom.auth.domain.dataset.test.UserTestDataset;
 import indi.xezzon.tao.exception.BaseException;
 import indi.xezzon.tao.exception.ClientException;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package indi.xezzon.geom.auth.domain.dataset;
+package indi.xezzon.geom.auth.domain.dataset.test;
 
 import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.UserGroupMember;

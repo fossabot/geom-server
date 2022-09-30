@@ -4,12 +4,11 @@ import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import indi.xezzon.geom.auth.dao.UserGroupDAO;
-import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.QUserGroup;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.domain.UserGroup;
-import indi.xezzon.geom.auth.domain.dataset.UserGroupTestDataset;
-import indi.xezzon.geom.auth.domain.dataset.UserTestDataset;
+import indi.xezzon.geom.auth.domain.dataset.test.UserGroupTestDataset;
+import indi.xezzon.geom.auth.domain.dataset.test.UserTestDataset;
 import indi.xezzon.tao.exception.ClientException;
 import java.util.List;
 import java.util.Objects;
@@ -32,8 +31,6 @@ class UserGroupServiceTest {
   private transient UserGroupDAO userGroupDAO;
   @Resource
   private transient UserService userService;
-  @Resource
-  private transient UserGroupMemberDAO userGroupMemberDAO;
   private final transient User currentUser = UserTestDataset.find(Objects::nonNull);
 
   @BeforeEach

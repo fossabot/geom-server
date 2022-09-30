@@ -1,4 +1,4 @@
-package indi.xezzon.geom.auth.domain.dataset;
+package indi.xezzon.geom.auth.domain.dataset.test;
 
 import cn.hutool.core.util.RandomUtil;
 import indi.xezzon.geom.auth.dao.UserDAO;

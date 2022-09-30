@@ -1,4 +1,4 @@
-package indi.xezzon.geom.auth.domain;
+package indi.xezzon.geom.auth.domain.query;
 
 import static indi.xezzon.geom.constant.PatternConstants.PASSWORD_PATTERN;
 

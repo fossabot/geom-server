@@ -1,4 +1,4 @@
-package indi.xezzon.geom.auth.domain;
+package indi.xezzon.geom.auth.domain.query;
 
 import lombok.Getter;
 import lombok.Setter;

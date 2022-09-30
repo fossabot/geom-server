@@ -1,6 +1,6 @@
 package indi.xezzon.geom.auth.domain.convert;
 
-import indi.xezzon.geom.auth.domain.RegisterQuery;
+import indi.xezzon.geom.auth.domain.query.RegisterQuery;
 import indi.xezzon.geom.auth.domain.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

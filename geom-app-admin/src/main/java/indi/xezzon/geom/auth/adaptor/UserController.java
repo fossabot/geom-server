@@ -2,7 +2,7 @@ package indi.xezzon.geom.auth.adaptor;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-import indi.xezzon.geom.auth.domain.UpdateCipherQuery;
+import indi.xezzon.geom.auth.domain.query.UpdateCipherQuery;
 import indi.xezzon.geom.auth.service.UserService;
 import indi.xezzon.tao.exception.ClientException;
 import indi.xezzon.tao.logger.LogRecord;
