@@ -1,11 +1,14 @@
 package indi.xezzon.geom.auth.service;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.BCrypt;
+import indi.xezzon.geom.auth.constant.SessionConstant;
 import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
+import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.domain.dataset.UserTestDataset;
 import indi.xezzon.tao.exception.BaseException;
 import indi.xezzon.tao.exception.ClientException;
@@ -64,7 +67,16 @@ class UserServiceTest {
     /* 正常流程测试 */
     userService.login(currentUser.getUsername(), currentUser.getPlaintext());
     Assertions.assertTrue(StpUtil.isLogin());
-    StpUtil.logout();
+    UserGroup userGroup = StpUtil.getTokenSession()
+        .get(SessionConstant.CURRENT_GROUP, null);
+    Assertions.assertNotNull(userGroup);
+    Assertions.assertEquals(currentUser.getUsername(), userGroup.getCode());
+    // 注销
+    userService.logout(currentUser.getId());
+    Assertions.assertFalse(StpUtil.isLogin());
+    Assertions.assertThrows(NotLoginException.class,
+        () -> StpUtil.getTokenSession().get(SessionConstant.CURRENT_GROUP)
+    );
     /* 预期异常测试 */
     Assertions.assertThrows(BaseException.class,
         () -> userService.login(RandomUtil.randomString(6), currentUser.getPlaintext())

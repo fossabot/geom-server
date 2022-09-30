@@ -6,6 +6,7 @@ import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.observation.UserRegisterObservation;
+import indi.xezzon.geom.auth.service.UserGroupService;
 import indi.xezzon.geom.auth.service.UserService;
 import indi.xezzon.tao.exception.ClientException;
 import indi.xezzon.tao.observer.ObserverContext;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,10 +24,15 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
   private final transient UserDAO userDAO;
+  private final transient UserGroupService userGroupService;
 
   @Autowired
-  public UserServiceImpl(UserDAO userDAO) {
+  public UserServiceImpl(
+      UserDAO userDAO,
+      @Lazy UserGroupService userGroupService
+  ) {
     this.userDAO = userDAO;
+    this.userGroupService = userGroupService;
   }
 
   @Override
@@ -70,8 +77,11 @@ public class UserServiceImpl implements UserService {
     if (!BCrypt.checkpw(cipher, user.getCipher())) {
       throw new ClientException("用户名或密码错误");
     }
-
+    /* 执行主流程 */
     StpUtil.login(user.getId());
+    /* 后置操作 */
+    // 保存当前用户组
+    userGroupService.switchGroup(user.getUsername());
   }
 
   @Override

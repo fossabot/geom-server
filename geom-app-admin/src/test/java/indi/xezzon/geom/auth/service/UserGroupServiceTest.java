@@ -1,5 +1,6 @@
 package indi.xezzon.geom.auth.service;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import indi.xezzon.geom.auth.dao.UserGroupDAO;
@@ -10,6 +11,7 @@ import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.domain.dataset.UserGroupTestDataset;
 import indi.xezzon.geom.auth.domain.dataset.UserTestDataset;
 import indi.xezzon.tao.exception.ClientException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Resource;
@@ -142,6 +144,21 @@ class UserGroupServiceTest {
     // 移除所有者
     Assertions.assertThrows(ClientException.class,
         () -> userGroupService.removeMember(userGroup.getId(), currentUser.getId())
+    );
+  }
+
+  @Test
+  void switchGroup() {
+    /* 正常流程 */
+    List<UserGroup> userGroups = userGroupService.listByUserId(StpUtil.getLoginId(null));
+    Assertions.assertNotEquals(0, userGroups.size());
+    Assertions.assertDoesNotThrow(
+        () -> userGroupService.switchGroup(userGroups.stream().findAny().get().getCode())
+    );
+    /* 预期异常 */
+    StpUtil.logout();
+    Assertions.assertThrows(NotLoginException.class,
+        () -> userGroupService.switchGroup(userGroups.stream().findAny().get().getCode())
     );
   }
 }

@@ -1,7 +1,7 @@
 package indi.xezzon.geom.auth.domain.dataset;
 
-import indi.xezzon.geom.auth.dao.UserGroupDAO;
-import indi.xezzon.geom.auth.domain.UserGroup;
+import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
+import indi.xezzon.geom.auth.domain.UserGroupMember;
 import indi.xezzon.geom.core.domain.AbstractDataset;
 import java.util.List;
 import java.util.function.Predicate;
@@ -14,24 +14,22 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Profile({"dev", "test"})
-public final class UserGroupTestDataset extends AbstractDataset<UserGroup> {
+public class UserGroupMemberDataset extends AbstractDataset<UserGroupMember> {
 
-  private static final List<UserGroup> DATASET = List.of(
-      new UserGroup()
+  private static final List<UserGroupMember> DATASET = List.of(
+      new UserGroupMember()
           .setId("1")
-          .setCode("test-user")
-          .setName("test-group-name")
-          .setOwnerId("1"),
-      new UserGroup()
+          .setGroupId("1")
+          .setUserId("1"),
+      new UserGroupMember()
           .setId("2")
-          .setCode("test-user-2")
-          .setName("test-group-name-2")
-          .setOwnerId("2")
+          .setGroupId("2")
+          .setUserId("2")
   );
 
   @Autowired
-  private UserGroupTestDataset(UserGroupDAO userGroupDAO) {
-    super(DATASET, userGroupDAO);
+  private UserGroupMemberDataset(UserGroupMemberDAO userGroupMemberDAO) {
+    super(DATASET, userGroupMemberDAO);
   }
 
   /**
@@ -39,7 +37,7 @@ public final class UserGroupTestDataset extends AbstractDataset<UserGroup> {
    * @param predicate 筛选条件
    * @return 数据集中符合条件的任一数据 若没有则返回null
    */
-  public static UserGroup find(Predicate<UserGroup> predicate) {
+  public static UserGroupMember find(Predicate<UserGroupMember> predicate) {
     return DATASET.stream()
         .filter(predicate)
         .findAny()

@@ -3,8 +3,11 @@ package indi.xezzon.geom.auth.dao.impl;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
+import indi.xezzon.geom.auth.domain.QUserGroup;
 import indi.xezzon.geom.auth.domain.QUserGroupMember;
+import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.domain.UserGroupMember;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +42,14 @@ public class UserGroupMemberDAOImpl
     return queryFactory.delete(Q_USER_GROUP_MEMBER)
         .where(predicate)
         .execute();
+  }
+
+  @Override
+  public List<UserGroup> findAllUserGroupByUserId(String userId) {
+    final QUserGroup qUserGroup = QUserGroup.userGroup;
+    return queryFactory.selectFrom(qUserGroup)
+        .innerJoin(Q_USER_GROUP_MEMBER).on(qUserGroup.id.eq(Q_USER_GROUP_MEMBER.groupId))
+        .where(Q_USER_GROUP_MEMBER.userId.eq(userId))
+        .fetch();
   }
 }

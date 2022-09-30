@@ -1,12 +1,17 @@
 package indi.xezzon.geom.auth.adaptor;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.stp.StpUtil;
 import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.service.UserGroupService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,5 +65,24 @@ public class UserGroupController {
   @DeleteMapping("/{groupId}/member/{userId}")
   public void dismiss(@PathVariable String groupId, @PathVariable String userId) {
     userGroupService.removeMember(groupId, userId);
+  }
+
+  /**
+   * 获取当前用户所在用户组
+   * @return 用户组列表
+   */
+  @GetMapping("")
+  @SaCheckLogin
+  public List<UserGroup> listUserGroup() {
+    return userGroupService.listByUserId(StpUtil.getLoginId(null));
+  }
+
+  /**
+   * 切换当前会话的用户组
+   * @param groupCode 用户组编码
+   */
+  @PutMapping("/{groupCode}/current")
+  public void switchGroup(@PathVariable String groupCode) {
+    userGroupService.switchGroup(groupCode);
   }
 }
