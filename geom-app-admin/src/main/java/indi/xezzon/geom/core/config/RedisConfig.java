@@ -1,8 +1,6 @@
 package indi.xezzon.geom.core.config;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -42,11 +40,6 @@ public class RedisConfig {
 
   @Bean
   public RedisSerializer<?> redisValueSerializer(ObjectMapper objectMapper) {
-    objectMapper.activateDefaultTyping(
-        objectMapper.getPolymorphicTypeValidator(),
-        DefaultTyping.NON_FINAL,
-        As.PROPERTY
-    );
     return new GenericJackson2JsonRedisSerializer(objectMapper);
   }
 }

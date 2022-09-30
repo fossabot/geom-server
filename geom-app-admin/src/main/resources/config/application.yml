@@ -9,8 +9,6 @@ spring:
       - ${DB_TYPE:pgsql}
       - ${CACHE_TYPE:in-memory}
   jackson:
-    visibility:
-      ALL: ANY
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: false
     date-format: yyyy-MM-dd HH:mm:ss
