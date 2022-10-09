@@ -1,11 +1,13 @@
 package indi.xezzon.geom.core.manager;
 
-import indi.xezzon.geom.core.config.RedisConfig;
+import static indi.xezzon.geom.core.constant.SpringConstants.BEAN_PREFIX;
+import static indi.xezzon.geom.core.constant.SpringConstants.ID_GENERATOR;
+
 import indi.xezzon.tao.exception.ThirdPartyException;
 import indi.xezzon.tao.manager.IdGenerator;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author xezzon
  */
 @Component
-@ConditionalOnBean(RedisConfig.class)
+@ConditionalOnProperty(prefix = BEAN_PREFIX, name = ID_GENERATOR, havingValue = "redis")
 public class RedisIdGenerator implements IdGenerator {
 
   private static final String GLOBAL_ID_KEY = "global-id";

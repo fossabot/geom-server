@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
     /* 后置处理 */
     // 若禁用时间大于当前时间 将该账号踢下线
     if (activateTime.compareTo(LocalDateTime.now()) > 0) {
-      StpUtil.logout(userId);
+      StpUtil.kickout(userId);
     }
   }
 

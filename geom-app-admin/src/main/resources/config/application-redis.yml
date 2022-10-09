@@ -11,3 +11,4 @@ spring:
     timeout: 3000ms
 bean:
   id-generator: redis
+  sa-token-dao: redis
