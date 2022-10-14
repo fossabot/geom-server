@@ -1,20 +1,12 @@
 package indi.xezzon.geom.auth.dao.impl;
 
-import cn.hutool.core.util.ReflectUtil;
-import com.querydsl.core.types.Path;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
+import indi.xezzon.geom.core.util.JpaUtil;
 import javax.annotation.Resource;
-import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.JpaMetamodelEntityInformation;
@@ -42,22 +34,8 @@ public class UserDAOImpl extends QuerydslJpaRepository<User, String> implements 
   @Override
   @Transactional(rollbackFor = {Exception.class})
   public boolean update(User user) {
-    JPAUpdateClause clause = queryFactory.update(Q_USER_DO);
-    Set<Field> fields = Arrays.stream(user.getClass().getDeclaredFields())
-        .filter(field -> Objects.nonNull(field.getAnnotation(Column.class)))
-        .filter(field -> Objects.equals(field.getAnnotation(Column.class).updatable(), true))
-        .collect(Collectors.toSet());
-    if (fields.isEmpty()) {
-      return false;
-    }
-    for (Field field : fields) {
-      Path path = (Path<?>) ReflectUtil.getFieldValue(Q_USER_DO, field.getName());
-      Object value = ReflectUtil.getFieldValue(user, field.getName());
-      if (value != null) {
-        clause.set(path, value);
-      }
-    }
-    clause.set(Q_USER_DO.updateTime, LocalDateTime.now());
+    JPAUpdateClause clause =
+        JpaUtil.getUpdateClause(user, queryFactory.update(Q_USER_DO), Q_USER_DO);
     clause.where(Q_USER_DO.id.eq(user.getId()));
     long affected = clause.execute();
     return affected > 0;
