@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -80,14 +81,19 @@ public class JpaUtil {
       T dataObj,
       Class<RT> clazz
   ) {
+    ParseTree parseTree = commonQuery.parseFilter();
+    if (parseTree == null) {
+      return null;
+    }
     // 筛选
     CommonQueryFilterJpaVisitor<T, RT> visitor = new CommonQueryFilterJpaVisitor<>(dataObj, clazz);
-    return visitor.visit(commonQuery.parseFilter());
+    return visitor.visit(parseTree);
   }
 
   public static Pageable getPageable(CommonQuery commonQuery) {
-    Pageable pageable = Pageable.ofSize(commonQuery.getPageSize())
-        .withPage(commonQuery.getPageNum());
+    Pageable pageable = commonQuery.getPageSize() > 0
+        ? Pageable.ofSize(commonQuery.getPageSize()).withPage(commonQuery.getPageNum())
+        : Pageable.unpaged();
     commonQuery.parseSort()
         .forEach(sorter -> pageable.getSort()
             .and(Sort.by(
@@ -142,7 +148,8 @@ class CommonQueryFilterJpaVisitor<T extends EntityPathBase<RT>, RT>
       String rawOperator = ctx.OP().getText();
       String rawValue = ctx.VALUE().getText();
       /* 解析字段 */
-      SimpleExpression<?> field = (SimpleExpression<?>) ReflectUtil.getFieldValue(dataObj, rawField);
+      SimpleExpression<?> field =
+          (SimpleExpression<?>) ReflectUtil.getFieldValue(dataObj, rawField);
       if (field == null) {
         throw nonexistentField(ctx.getText());
       }
