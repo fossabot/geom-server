@@ -15,7 +15,6 @@ public class IllegalParameterException extends ClientException {
   private static final String ERROR_CODE = "A0400";
 
   protected IllegalParameterException(BindException cause) {
-    super(ERROR_CODE, cause.getBindingResult().getFieldError()
-        .getDefaultMessage(), cause);
+    super(ERROR_CODE, cause.getBindingResult().getFieldError().getDefaultMessage(), cause);
   }
 }

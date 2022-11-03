@@ -154,4 +154,11 @@ public class UserGroupServiceImpl implements UserGroupService {
     StpUtil.getTokenSession()
         .set(SessionConstant.CURRENT_GROUP, userGroup);
   }
+
+  @Override
+  public UserGroup getCurrentGroup() {
+    StpUtil.checkLogin();
+    return (UserGroup) StpUtil.getTokenSession()
+        .get(SessionConstant.CURRENT_GROUP);
+  }
 }
