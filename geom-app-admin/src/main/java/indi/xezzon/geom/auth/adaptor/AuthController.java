@@ -53,6 +53,16 @@ public class AuthController {
   }
 
   /**
+   * 查询当前登录用户
+   * @return 当前用户账号信息
+   */
+  @GetMapping("/me")
+  public User getCurrentUser() {
+    StpUtil.checkLogin();
+    return userService.getById(StpUtil.getLoginId(null));
+  }
+
+  /**
    * 检查登录状态
    * @return 是否已登录
    */

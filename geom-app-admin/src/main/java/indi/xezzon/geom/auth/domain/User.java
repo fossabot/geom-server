@@ -1,6 +1,7 @@
 package indi.xezzon.geom.auth.domain;
 
 import cn.hutool.crypto.digest.BCrypt;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import indi.xezzon.geom.auth.constant.DatabaseConstant;
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.time.LocalDateTime;
@@ -64,6 +65,7 @@ public class User {
    */
   @Column(name = "cipher", nullable = false)
   @Setter(AccessLevel.PRIVATE)
+  @JsonIgnore
   private String cipher;
 
   /**
