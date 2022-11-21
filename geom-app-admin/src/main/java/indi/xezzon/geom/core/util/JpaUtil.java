@@ -183,12 +183,12 @@ class CommonQueryFilterJpaVisitor<T extends EntityPathBase<RT>, RT>
         };
       } else if (field instanceof EnumPath<?> f) {
         Class<Enum> enumClazz = (Class<Enum>) ReflectUtil.getField(this.clazz, rawField).getType();
-        Enum value = Enum.valueOf(enumClazz, rawValue);
+        Set<Enum> values = StrUtil.split(rawValue, ",").parallelStream()
+            .map(o -> Enum.valueOf(enumClazz, o))
+            .collect(Collectors.toSet());
         return switch (op) {
-          case EQ -> ReflectUtil.invoke(f, "eq", value);
-          case NE -> ReflectUtil.invoke(f, "ne", value);
-          case IN -> ReflectUtil.invoke(f, "in", value);
-          case OUT -> ReflectUtil.invoke(f, "notIn", value);
+          case EQ, IN -> ReflectUtil.invoke(f, "in", values);
+          case NE, OUT -> ReflectUtil.invoke(f, "notIn", values);
           default -> throw unsupportedOperator(ctx.getText());
         };
       } else if (field instanceof NumberPath<?> f) {
