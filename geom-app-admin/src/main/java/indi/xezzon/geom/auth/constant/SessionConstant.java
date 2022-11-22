@@ -11,5 +11,5 @@ public class SessionConstant {
   /**
    * 当前用户组
    */
-  public static final transient String CURRENT_GROUP = "currentGroup";
+  public static final String CURRENT_GROUP = "currentGroup";
 }

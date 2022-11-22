@@ -158,4 +158,10 @@ class UserGroupServiceTest {
         () -> userGroupService.switchGroup(userGroups.stream().findAny().get().getCode())
     );
   }
+
+  @Test
+  void getCurrentGroup() {
+    UserGroup currentGroup = userGroupService.getCurrentGroup();
+    Assertions.assertEquals(currentUser.getUsername(), currentGroup.getCode());
+  }
 }
