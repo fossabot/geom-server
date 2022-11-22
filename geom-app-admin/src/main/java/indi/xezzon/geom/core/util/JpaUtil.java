@@ -34,6 +34,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
+import javax.persistence.Version;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -64,13 +65,18 @@ public class JpaUtil {
         .filter(field -> field.getAnnotation(Column.class).updatable())
         .collect(Collectors.toSet());
     for (Field field : fields) {
-      Path path = (Path<?>) ReflectUtil.getFieldValue(dataObj, field.getName());
+      Object column = ReflectUtil.getFieldValue(dataObj, field.getName());
+      Path path = (Path) column;
       Object value = ReflectUtil.getFieldValue(obj, field.getName());
       if (field.isAnnotationPresent(LastModifiedDate.class)) {
         clause.set(path, current);
       }
       if (value != null) {
         clause.set(path, value);
+      }
+      SimpleExpression expression = (SimpleExpression) column;
+      if (field.isAnnotationPresent(Version.class)) {
+        clause.where(expression.eq(value));
       }
     }
     return clause;
@@ -177,12 +183,12 @@ class CommonQueryFilterJpaVisitor<T extends EntityPathBase<RT>, RT>
         };
       } else if (field instanceof EnumPath<?> f) {
         Class<Enum> enumClazz = (Class<Enum>) ReflectUtil.getField(this.clazz, rawField).getType();
-        Enum value = Enum.valueOf(enumClazz, rawValue);
+        Set<Enum> values = StrUtil.split(rawValue, ",").parallelStream()
+            .map(o -> Enum.valueOf(enumClazz, o))
+            .collect(Collectors.toSet());
         return switch (op) {
-          case EQ -> ReflectUtil.invoke(f, "eq", value);
-          case NE -> ReflectUtil.invoke(f, "ne", value);
-          case IN -> ReflectUtil.invoke(f, "in", value);
-          case OUT -> ReflectUtil.invoke(f, "notIn", value);
+          case EQ, IN -> ReflectUtil.invoke(f, "in", values);
+          case NE, OUT -> ReflectUtil.invoke(f, "notIn", values);
           default -> throw unsupportedOperator(ctx.getText());
         };
       } else if (field instanceof NumberPath<?> f) {
