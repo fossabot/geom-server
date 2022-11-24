@@ -13,6 +13,7 @@ import com.querydsl.core.types.dsl.DatePath;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.core.types.dsl.EnumPath;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringPath;
@@ -31,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
@@ -47,6 +49,8 @@ import org.springframework.data.domain.Sort.Direction;
  */
 public class JpaUtil {
 
+  public static final BooleanExpression TRUE_EXPRESSION = Expressions.ONE.eq(1);
+
   /**
    * 局部更新语句
    * @param obj 更新的信息
@@ -54,6 +58,7 @@ public class JpaUtil {
    * @param dataObj DO对象
    * @return 拼接后的update语句
    */
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public static JPAUpdateClause getUpdateClause(
       Object obj,
       JPAUpdateClause clause,
@@ -89,16 +94,17 @@ public class JpaUtil {
   ) {
     ParseTree parseTree = commonQuery.parseFilter();
     if (parseTree == null) {
-      return null;
+      return TRUE_EXPRESSION;
     }
     // 筛选
     CommonQueryFilterJpaVisitor<T, RT> visitor = new CommonQueryFilterJpaVisitor<>(dataObj, clazz);
-    return visitor.visit(parseTree);
+    return Optional.ofNullable(visitor.visit(parseTree))
+        .orElse(TRUE_EXPRESSION);
   }
 
   public static Pageable getPageable(CommonQuery commonQuery) {
     Pageable pageable = commonQuery.getPageSize() > 0
-        ? Pageable.ofSize(commonQuery.getPageSize()).withPage(commonQuery.getPageNum())
+        ? Pageable.ofSize(commonQuery.getPageSize()).withPage(commonQuery.getPageNum() - 1)
         : Pageable.unpaged();
     commonQuery.parseSort()
         .forEach(sorter -> pageable.getSort()
@@ -148,6 +154,7 @@ class CommonQueryFilterJpaVisitor<T extends EntityPathBase<RT>, RT>
   }
 
   @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public BooleanExpression visitPredicate(PredicateContext ctx) {
     try {
       String rawField = ctx.FIELD().getText();
