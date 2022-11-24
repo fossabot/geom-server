@@ -103,7 +103,7 @@ public class JpaUtil {
 
   public static Pageable getPageable(CommonQuery commonQuery) {
     Pageable pageable = commonQuery.getPageSize() > 0
-        ? Pageable.ofSize(commonQuery.getPageSize()).withPage(commonQuery.getPageNum())
+        ? Pageable.ofSize(commonQuery.getPageSize()).withPage(commonQuery.getPageNum() - 1)
         : Pageable.unpaged();
     commonQuery.parseSort()
         .forEach(sorter -> pageable.getSort()
