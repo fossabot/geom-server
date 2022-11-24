@@ -11,7 +11,7 @@ import org.testcontainers.containers.GenericContainer;
 public class RedisContainer {
 
   private static final int PORT = 6379;
-  private final GenericContainer<?> redis = new GenericContainer<>("redis:7-alpine")
+  private transient final GenericContainer<?> redis = new GenericContainer<>("redis:7-alpine")
       .withExposedPorts(PORT);
 
   @PostConstruct

@@ -58,6 +58,7 @@ public class JpaUtil {
    * @param dataObj DO对象
    * @return 拼接后的update语句
    */
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public static JPAUpdateClause getUpdateClause(
       Object obj,
       JPAUpdateClause clause,
@@ -153,6 +154,7 @@ class CommonQueryFilterJpaVisitor<T extends EntityPathBase<RT>, RT>
   }
 
   @Override
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public BooleanExpression visitPredicate(PredicateContext ctx) {
     try {
       String rawField = ctx.FIELD().getText();
