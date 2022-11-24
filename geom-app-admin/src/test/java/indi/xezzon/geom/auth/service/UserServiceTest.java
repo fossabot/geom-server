@@ -1,14 +1,10 @@
 package indi.xezzon.geom.auth.service;
 
-import cn.dev33.satoken.exception.NotLoginException;
-import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.BCrypt;
-import indi.xezzon.geom.auth.constant.SessionConstant;
 import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
-import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.domain.dataset.test.UserTestDataset;
 import indi.xezzon.tao.exception.BaseException;
 import indi.xezzon.tao.exception.ClientException;
@@ -27,11 +23,13 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class UserServiceTest {
 
+  private final transient User currentUser = UserTestDataset.find(Objects::nonNull);
   @Resource
   private transient UserService userService;
   @Resource
   private transient UserDAO userDAO;
-  private final transient User currentUser = UserTestDataset.find(Objects::nonNull);
+  @Resource
+  private transient AuthService authService;
 
   @BeforeEach
   void setUp() {
@@ -63,36 +61,6 @@ class UserServiceTest {
 
   @Test
   @Transactional
-  void login() {
-    /* 正常流程测试 */
-    userService.login(currentUser.getUsername(), currentUser.getPlaintext());
-    Assertions.assertTrue(StpUtil.isLogin());
-    UserGroup userGroup = StpUtil.getTokenSession()
-        .get(SessionConstant.CURRENT_GROUP, null);
-    Assertions.assertNotNull(userGroup);
-    Assertions.assertEquals(currentUser.getUsername(), userGroup.getCode());
-    // 注销
-    userService.logout(currentUser.getId());
-    Assertions.assertFalse(StpUtil.isLogin());
-    Assertions.assertThrows(NotLoginException.class,
-        () -> StpUtil.getTokenSession().get(SessionConstant.CURRENT_GROUP)
-    );
-    /* 预期异常测试 */
-    Assertions.assertThrows(BaseException.class,
-        () -> userService.login(RandomUtil.randomString(6), currentUser.getPlaintext())
-    );
-    Assertions.assertThrows(BaseException.class,
-        () -> userService.login(currentUser.getUsername(), RandomUtil.randomString(6))
-    );
-    currentUser.setActivateTime(LocalDateTime.now().plusMonths(1));
-    userDAO.save(currentUser);
-    Assertions.assertThrows(BaseException.class,
-        () -> userService.login(currentUser.getUsername(), currentUser.getPlaintext())
-    );
-  }
-
-  @Test
-  @Transactional
   void updateCipher() {
     /* 正常流程 */
     String newCipher = RandomUtil.randomString(15);
@@ -114,18 +82,7 @@ class UserServiceTest {
     // 禁用用户
     userService.forbidUser(currentUser.getId(), LocalDateTime.now().plusMonths(1));
     Assertions.assertThrows(ClientException.class,
-        () -> userService.login(currentUser.getUsername(), currentUser.getPlaintext())
+        () -> authService.login(currentUser.getUsername(), currentUser.getPlaintext())
     );
-  }
-
-  @Test
-  @Transactional
-  void checkCipher() {
-    /* 正常流程 */
-    StpUtil.login(currentUser.getId());
-    Assertions.assertTrue(userService.checkCipher(currentUser.getPlaintext()));
-    Assertions.assertFalse(userService.checkCipher(RandomUtil.randomString(6)));
-    userService.logout(currentUser.getId());
-    Assertions.assertFalse(userService.checkCipher(currentUser.getPlaintext()));
   }
 }

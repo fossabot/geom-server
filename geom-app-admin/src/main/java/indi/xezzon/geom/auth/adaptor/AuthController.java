@@ -1,11 +1,13 @@
 package indi.xezzon.geom.auth.adaptor;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import indi.xezzon.geom.auth.domain.query.LoginQuery;
 import indi.xezzon.geom.auth.domain.query.RegisterQuery;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.domain.convert.UserConvert;
+import indi.xezzon.geom.auth.service.AuthService;
 import indi.xezzon.geom.auth.service.UserService;
 import indi.xezzon.tao.logger.LogRecord;
 import javax.validation.Valid;
@@ -24,11 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 public class AuthController {
 
-  private final transient UserService userService;
+  private transient final UserService userService;
+  private transient final AuthService authService;
 
   @Autowired
-  public AuthController(UserService userService) {
+  public AuthController(UserService userService, AuthService authService) {
     this.userService = userService;
+    this.authService = authService;
   }
 
   /**
@@ -48,7 +52,7 @@ public class AuthController {
   @PostMapping("/login")
   @LogRecord
   public SaTokenInfo login(@RequestBody LoginQuery query) {
-    userService.login(query.getUsername(), query.getCipher());
+    authService.login(query.getUsername(), query.getCipher());
     return StpUtil.getTokenInfo();
   }
 
@@ -57,6 +61,7 @@ public class AuthController {
    * @return 当前用户账号信息
    */
   @GetMapping("/me")
+  @SaCheckLogin
   public User getCurrentUser() {
     StpUtil.checkLogin();
     return userService.getById(StpUtil.getLoginId(null));

@@ -55,16 +55,4 @@ public interface UserGroupService {
    * @return 用户所在用户组
    */
   List<UserGroup> listByUserId(String userId);
-
-  /**
-   * 切换当前用户组（对当前会话有效）
-   * @param groupCode 用户组编码
-   */
-  void switchGroup(String groupCode);
-
-  /**
-   * 获取当前用户组
-   * @return 当前用户组
-   */
-  UserGroup getCurrentGroup();
 }

@@ -17,26 +17,6 @@ public interface UserService {
   User register(@NotNull User user);
 
   /**
-   * 用户登录
-   * @param username 用户名
-   * @param cipher 密码
-   */
-  void login(String username, String cipher);
-
-  /**
-   * 用户注销
-   * @param userId 用户主键
-   */
-  void logout(String userId);
-
-  /**
-   * 校验当前用户的密码
-   * @param cipher 用户输入的密码
-   * @return 用户输入的密码是否正确
-   */
-  boolean checkCipher(String cipher);
-
-  /**
    * 修改密码
    * @param userId 用户ID
    * @param cipher 新密码
@@ -56,4 +36,11 @@ public interface UserService {
    * @return 用户信息 找不到记录时返回null
    */
   User getById(String id);
+
+  /**
+   * 根据用户名获取用户信息
+   * @param username 用户名
+   * @return 用户信息 找不到记录时返回null
+   */
+  User getByUsername(String username);
 }
