@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -232,7 +233,7 @@ class CommonQueryFilterJpaVisitor<T extends EntityPathBase<RT>, RT>
           default -> throw unsupportedOperator(ctx.getText());
         };
       } else if (field instanceof TimePath<?> f) {
-        LocalDate value = LocalDate.parse(rawValue);
+        LocalTime value = LocalTime.parse(rawValue);
         return switch (op) {
           case EQ -> ReflectUtil.invoke(f, "eq", value);
           case NE -> ReflectUtil.invoke(f, "ne", value);
