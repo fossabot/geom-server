@@ -37,7 +37,7 @@ class UserDAOTest {
     // 创建时间由 JPA 自动生成 手动设置无效
     Assertions.assertTrue(
         existUser.map(User::getCreateTime)
-            .filter(createTime -> LocalDateTime.now().minusHours(1).compareTo(createTime) < 0)
+            .filter(createTime -> LocalDateTime.now().minusHours(1).isBefore(createTime))
             .isPresent()
     );
   }

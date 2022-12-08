@@ -96,10 +96,7 @@ public class UserServiceImpl implements UserService {
       return false;
     }
     Optional<User> user = userDAO.findById(id);
-    if (user.isEmpty()) {
-      return false;
-    }
-    return BCrypt.checkpw(cipher, user.get().getCipher());
+    return user.filter(value -> BCrypt.checkpw(cipher, value.getCipher())).isPresent();
   }
 
   @Override
@@ -118,7 +115,7 @@ public class UserServiceImpl implements UserService {
     );
     /* 后置处理 */
     // 若禁用时间大于当前时间 将该账号踢下线
-    if (activateTime.compareTo(LocalDateTime.now()) > 0) {
+    if (activateTime.isAfter(LocalDateTime.now())) {
       StpUtil.kickout(userId);
     }
   }
