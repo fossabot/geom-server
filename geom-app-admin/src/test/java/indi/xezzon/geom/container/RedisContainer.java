@@ -2,12 +2,14 @@ package indi.xezzon.geom.container;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.testcontainers.containers.GenericContainer;
 
 @Component
 @Order(0)
+@Profile("test")
 public class RedisContainer {
 
   private static final int PORT = 6379;
