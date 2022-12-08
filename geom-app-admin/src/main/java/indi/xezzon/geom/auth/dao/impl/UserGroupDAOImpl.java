@@ -36,7 +36,7 @@ public class UserGroupDAOImpl
   @Transactional(rollbackFor = {Exception.class})
   public boolean update(UserGroup userGroup) {
     JPAUpdateClause clause =
-        JpaUtil.getUpdateClause(userGroup, queryFactory.update(Q_USER_GROUP_DO), Q_USER_GROUP_DO);
+        JpaUtil.getUpdateClause(userGroup, queryFactory, Q_USER_GROUP_DO);
     clause.where(Q_USER_GROUP_DO.id.eq(userGroup.getId()));
     long affected = clause.execute();
     return affected > 0;

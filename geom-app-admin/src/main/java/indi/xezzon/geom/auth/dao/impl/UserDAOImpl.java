@@ -35,7 +35,7 @@ public class UserDAOImpl extends QuerydslJpaRepository<User, String> implements 
   @Transactional(rollbackFor = {Exception.class})
   public boolean update(User user) {
     JPAUpdateClause clause =
-        JpaUtil.getUpdateClause(user, queryFactory.update(Q_USER_DO), Q_USER_DO);
+        JpaUtil.getUpdateClause(user, queryFactory, Q_USER_DO);
     clause.where(Q_USER_DO.id.eq(user.getId()));
     long affected = clause.execute();
     return affected > 0;

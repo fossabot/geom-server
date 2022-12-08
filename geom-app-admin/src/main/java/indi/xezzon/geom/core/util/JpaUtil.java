@@ -18,6 +18,7 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.core.types.dsl.TimePath;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import indi.xezzon.tao.retrieval.CommonQuery;
 import indi.xezzon.tao.retrieval.CommonQueryFilterBaseVisitor;
@@ -55,16 +56,17 @@ public class JpaUtil {
   /**
    * 局部更新语句
    * @param obj 更新的信息
-   * @param clause update语句
+   * @param queryFactory update语句
    * @param dataObj DO对象
    * @return 拼接后的update语句
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public static JPAUpdateClause getUpdateClause(
-      Object obj,
-      JPAUpdateClause clause,
-      Object dataObj
+  public static <T> JPAUpdateClause getUpdateClause(
+      T obj,
+      JPAQueryFactory queryFactory,
+      EntityPathBase<T> dataObj
   ) {
+    JPAUpdateClause clause = queryFactory.update(dataObj);
     LocalDateTime current = LocalDateTime.now();
     Set<Field> fields = Arrays.stream(obj.getClass().getDeclaredFields())
         .filter(field -> Objects.nonNull(field.getAnnotation(Column.class)))
