@@ -1,5 +1,6 @@
 package indi.xezzon.geom.core.dao;
 
+import indi.xezzon.tao.domain.NewType;
 import indi.xezzon.tao.retrieval.CommonQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,13 +11,8 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
  * @param <T> 标准实体模型
  * @author xezzon
  */
-public interface JpaWrapper<T, M extends JpaRepository<T, ?> & QuerydslPredicateExecutor<T>> {
-
-  /**
-   * 获取DAO
-   * @return 内部DAO
-   */
-  M get();
+public interface JpaWrapper<T, M extends JpaRepository<T, ?> & QuerydslPredicateExecutor<T>>
+    extends NewType<M> {
 
   /**
    * 根据ID局部更新
