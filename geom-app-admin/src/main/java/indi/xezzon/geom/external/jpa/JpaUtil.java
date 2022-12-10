@@ -1,4 +1,4 @@
-package indi.xezzon.geom.core.util;
+package indi.xezzon.geom.external.jpa;
 
 import static indi.xezzon.tao.retrieval.CommonQuery.nonexistentField;
 import static indi.xezzon.tao.retrieval.CommonQuery.unsupportedOperator;

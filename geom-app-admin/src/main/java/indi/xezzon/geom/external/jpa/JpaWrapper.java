@@ -1,4 +1,4 @@
-package indi.xezzon.geom.core.dao;
+package indi.xezzon.geom.external.jpa;
 
 import indi.xezzon.tao.domain.NewType;
 import indi.xezzon.tao.retrieval.CommonQuery;

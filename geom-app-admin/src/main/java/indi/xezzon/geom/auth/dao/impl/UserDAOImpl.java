@@ -5,7 +5,7 @@ import com.querydsl.jpa.impl.JPAUpdateClause;
 import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
-import indi.xezzon.geom.core.util.JpaUtil;
+import indi.xezzon.geom.external.jpa.JpaUtil;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
