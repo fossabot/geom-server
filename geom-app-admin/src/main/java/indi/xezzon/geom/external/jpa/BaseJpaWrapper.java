@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import javax.annotation.Resource;
 import javax.persistence.Id;
+import org.hibernate.AnnotationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class BaseJpaWrapper<T, D extends EntityPathBase<T>, M extends JpaRepository<T, ?> & QuerydslPredicateExecutor<T>>
     implements JpaWrapper<T, M> {
 
-  protected transient final M dao;
+  protected final transient M dao;
   @Resource
   protected transient JPAQueryFactory queryFactory;
 
@@ -65,7 +66,7 @@ public abstract class BaseJpaWrapper<T, D extends EntityPathBase<T>, M extends J
     Field idField = Arrays.stream(this.getBeanClass().getDeclaredFields())
         .filter(field -> field.isAnnotationPresent(Id.class))
         .findAny()
-        .orElseThrow(() -> new RuntimeException("no id field"));
+        .orElseThrow(() -> new AnnotationException("No identifier specified for entity"));
     SimpleExpression column =
         (SimpleExpression) ReflectUtil.getFieldValue(this.getQuery(), idField.getName());
     Object value = ReflectUtil.getFieldValue(t, idField);
