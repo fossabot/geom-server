@@ -112,7 +112,10 @@ public class JpaUtil {
     commonQuery.parseSort()
         .forEach(sorter -> pageable.getSort()
             .and(Sort.by(
-                Direction.valueOf(sorter.getDirection().name()),
+                switch (sorter.getDirection()) {
+                  case ASC -> Direction.ASC;
+                  case DESC -> Direction.DESC;
+                },
                 sorter.getField()
             ))
         );
@@ -186,7 +189,7 @@ class CommonQueryFilterJpaVisitor<T extends EntityPathBase<RT>, RT>
         return switch (op) {
           case EQ -> f.eq(rawValue);
           case NE -> f.ne(rawValue);
-          case LLIKE -> f.like(rawValue + "%");
+          case LLIKE -> f.startsWith(rawValue);
           case IN -> f.in(StrUtil.split(rawValue, ","));
           case OUT -> f.notIn(StrUtil.split(rawValue, ","));
           default -> throw unsupportedOperator(ctx.getText());
