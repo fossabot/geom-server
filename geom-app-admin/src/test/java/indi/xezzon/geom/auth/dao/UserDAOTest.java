@@ -1,6 +1,7 @@
 package indi.xezzon.geom.auth.dao;
 
 import cn.hutool.core.util.RandomUtil;
+import indi.xezzon.geom.auth.dao.wrapper.WrappedUserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
 import java.time.Duration;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 class UserDAOTest {
 
   @Resource
-  private transient UserDAO userDAO;
+  private transient WrappedUserDAO wrappedUserDAO;
 
   @Test
   @Transactional
@@ -29,15 +30,16 @@ class UserDAOTest {
         .setNickname(RandomUtil.randomString(6))
         .setActivateTime(LocalDateTime.now())
         .setCreateTime(LocalDateTime.now().minusMonths(1));
-    userDAO.save(user);
+    wrappedUserDAO.get().save(user);
 
-    Optional<User> existUser = userDAO.findOne(QUser.user.username.eq(user.getUsername()));
+    Optional<User> existUser = wrappedUserDAO.get()
+        .findOne(QUser.user.username.eq(user.getUsername()));
 
     Assertions.assertTrue(existUser.isPresent());
     // 创建时间由 JPA 自动生成 手动设置无效
     Assertions.assertTrue(
         existUser.map(User::getCreateTime)
-            .filter(createTime -> LocalDateTime.now().minusHours(1).compareTo(createTime) < 0)
+            .filter(createTime -> LocalDateTime.now().minusHours(1).isBefore(createTime))
             .isPresent()
     );
   }
@@ -50,16 +52,16 @@ class UserDAOTest {
         .setPlaintext(RandomUtil.randomString(6))
         .setNickname(RandomUtil.randomString(6))
         .setActivateTime(LocalDateTime.now());
-    userDAO.save(user);
+    wrappedUserDAO.get().save(user);
     // 正常流程
     Thread.sleep(1000L);
     String newCipher = RandomUtil.randomString(8);
-    boolean updated = userDAO.update(new User()
+    boolean updated = wrappedUserDAO.update(new User()
         .setId(user.getId())
         .setPlaintext(newCipher)
     );
     Assertions.assertTrue(updated);
-    User user1 = userDAO.findOne(QUser.user.username.eq(user.getUsername())).get();
+    User user1 = wrappedUserDAO.get().findOne(QUser.user.username.eq(user.getUsername())).get();
     Assertions.assertEquals(user.getNickname(), user1.getNickname());
     Assertions.assertTrue(Duration.between(
         user.getUpdateTime(),
