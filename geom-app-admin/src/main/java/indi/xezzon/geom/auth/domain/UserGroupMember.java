@@ -3,7 +3,7 @@ package indi.xezzon.geom.auth.domain;
 import static indi.xezzon.geom.auth.domain.UserGroupMember.GROUP_ID;
 import static indi.xezzon.geom.auth.domain.UserGroupMember.USER_ID;
 
-import indi.xezzon.geom.auth.constant.DatabaseConstant;
+import indi.xezzon.geom.core.constant.DatabaseConstant;
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.util.Objects;
 import javax.persistence.Column;

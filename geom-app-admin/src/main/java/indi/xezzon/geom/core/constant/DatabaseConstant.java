@@ -1,4 +1,4 @@
-package indi.xezzon.geom.auth.constant;
+package indi.xezzon.geom.core.constant;
 
 /**
  * 数据库相关常量

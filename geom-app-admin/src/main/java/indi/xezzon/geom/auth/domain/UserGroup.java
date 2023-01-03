@@ -1,6 +1,6 @@
 package indi.xezzon.geom.auth.domain;
 
-import indi.xezzon.geom.auth.constant.DatabaseConstant;
+import indi.xezzon.geom.core.constant.DatabaseConstant;
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.util.Set;
 import javax.persistence.Column;
