@@ -1,7 +1,7 @@
 package indi.xezzon.geom.auth.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
-import indi.xezzon.geom.auth.dao.UserDAO;
+import indi.xezzon.geom.auth.dao.wrapper.WrappedUserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
 import indi.xezzon.geom.auth.observation.UserRegisterObservation;
@@ -19,17 +19,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-  private final transient UserDAO userDAO;
+  private final transient WrappedUserDAO userDAO;
 
   @Autowired
-  public UserServiceImpl(UserDAO userDAO) {
+  public UserServiceImpl(WrappedUserDAO userDAO) {
     this.userDAO = userDAO;
   }
 
   @Override
   public User register(@NotNull User user) {
     String username = user.getUsername();
-    boolean exists = userDAO.exists(QUser.user.username.eq(username));
+    boolean exists = userDAO.get().exists(QUser.user.username.eq(username));
     if (exists) {
       throw new ClientException("用户名" + username + "已注册");
     }
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     }
     user.setId(null);
 
-    userDAO.save(user);
+    userDAO.get().save(user);
     /* 后置操作 */
     ObserverContext.post(new UserRegisterObservation(
         user.getId(),
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     );
     /* 后置处理 */
     // 若禁用时间大于当前时间 将该账号踢下线
-    if (activateTime.compareTo(LocalDateTime.now()) > 0) {
+    if (activateTime.isAfter(LocalDateTime.now())) {
       StpUtil.kickout(userId);
     }
   }
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     if (id == null) {
       return null;
     }
-    return userDAO.findById(id).orElse(null);
+    return userDAO.get().findById(id).orElse(null);
   }
 
   @Override
@@ -89,6 +89,6 @@ public class UserServiceImpl implements UserService {
     if (username == null) {
       return null;
     }
-    return userDAO.findOne(QUser.user.username.eq(username)).orElse(null);
+    return userDAO.get().findOne(QUser.user.username.eq(username)).orElse(null);
   }
 }

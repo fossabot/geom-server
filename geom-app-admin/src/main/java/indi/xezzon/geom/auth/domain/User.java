@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import indi.xezzon.geom.auth.constant.DatabaseConstant;
 import indi.xezzon.geom.core.manager.HibernateIdGenerator;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -107,6 +106,6 @@ public class User {
     if (this.activateTime == null) {
       return true;
     }
-    return Objects.compare(LocalDateTime.now(), this.activateTime, LocalDateTime::compareTo) >= 0;
+    return this.activateTime.isBefore(LocalDateTime.now());
   }
 }

@@ -1,8 +1,8 @@
 package indi.xezzon.geom.auth.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
-import indi.xezzon.geom.auth.dao.UserGroupDAO;
-import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
+import indi.xezzon.geom.auth.dao.wrapper.WrappedUserGroupDAO;
+import indi.xezzon.geom.auth.dao.wrapper.WrappedUserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.QUserGroup;
 import indi.xezzon.geom.auth.domain.QUserGroupMember;
 import indi.xezzon.geom.auth.domain.User;
@@ -25,13 +25,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserGroupServiceImpl implements UserGroupService {
 
-  private final transient UserGroupDAO userGroupDAO;
-  private final transient UserGroupMemberDAO userGroupMemberDAO;
+  private final transient WrappedUserGroupDAO userGroupDAO;
+  private final transient WrappedUserGroupMemberDAO userGroupMemberDAO;
   private final transient UserService userService;
 
   public UserGroupServiceImpl(
-      UserGroupDAO userGroupDAO,
-      UserGroupMemberDAO userGroupMemberDAO,
+      WrappedUserGroupDAO userGroupDAO,
+      WrappedUserGroupMemberDAO userGroupMemberDAO,
       UserService userService
   ) {
     this.userGroupDAO = userGroupDAO;
@@ -59,14 +59,14 @@ public class UserGroupServiceImpl implements UserGroupService {
     // 登录状态
     StpUtil.checkLogin();
     // code 不能重复
-    boolean exists = userGroupDAO.exists(QUserGroup.userGroup.code.eq(userGroup.getCode()));
+    boolean exists = userGroupDAO.get().exists(QUserGroup.userGroup.code.eq(userGroup.getCode()));
     if (exists) {
       throw new ClientException("用户组" + userGroup.getCode() + "已存在");
     }
 
     userGroup.setId(null)
         .setOwnerId(StpUtil.getLoginId(null));
-    userGroupDAO.save(userGroup);
+    userGroupDAO.get().save(userGroup);
     /* 后置操作 */
     // 将owner添加到成员列表
     this.addMember(userGroup.getId(), userGroup.getOwnerId());
@@ -75,7 +75,7 @@ public class UserGroupServiceImpl implements UserGroupService {
   @Override
   public void transfer(String groupId, String userId) {
     /* 前置校验 */
-    UserGroup userGroup = userGroupDAO.findById(groupId)
+    UserGroup userGroup = userGroupDAO.get().findById(groupId)
         .orElseThrow(() -> new ClientException("用户组不存在"));
     if (!Objects.equals(userGroup.getOwnerId(), StpUtil.getLoginId())) {
       throw new ClientException("无权转让该用户组");
@@ -94,13 +94,13 @@ public class UserGroupServiceImpl implements UserGroupService {
 
   @Override
   public UserGroup getById(String id) {
-    return userGroupDAO.findById(id).orElse(null);
+    return userGroupDAO.get().findById(id).orElse(null);
   }
 
   @Override
   public void addMember(String groupId, String userId) {
     final QUserGroupMember qUserGroupMember = QUserGroupMember.userGroupMember;
-    boolean exists = userGroupMemberDAO.exists(
+    boolean exists = userGroupMemberDAO.get().exists(
         qUserGroupMember.groupId.eq(groupId)
             .and(qUserGroupMember.userId.eq(userId))
     );
@@ -108,7 +108,7 @@ public class UserGroupServiceImpl implements UserGroupService {
       // 用户已在用户组中直接返回
       return;
     }
-    userGroupMemberDAO.save(new UserGroupMember()
+    userGroupMemberDAO.get().save(new UserGroupMember()
         .setGroupId(groupId)
         .setUserId(userId)
     );
@@ -117,7 +117,7 @@ public class UserGroupServiceImpl implements UserGroupService {
   @Override
   public void removeMember(String groupId, String userId) {
     /* 前置校验 */
-    Optional<UserGroup> userGroup = userGroupDAO.findById(groupId);
+    Optional<UserGroup> userGroup = userGroupDAO.get().findById(groupId);
     if (userGroup.isEmpty()) {
       throw new ClientException("用户组不存在");
     }
@@ -133,7 +133,7 @@ public class UserGroupServiceImpl implements UserGroupService {
 
   @Override
   public UserGroup getByCode(String code) {
-    return userGroupDAO.findOne(
+    return userGroupDAO.get().findOne(
         QUserGroup.userGroup.code.eq(code)
     ).orElse(null);
   }
