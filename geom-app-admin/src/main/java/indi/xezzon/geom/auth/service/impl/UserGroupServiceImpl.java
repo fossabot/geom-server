@@ -1,7 +1,6 @@
 package indi.xezzon.geom.auth.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
-import indi.xezzon.geom.auth.constant.SessionConstant;
 import indi.xezzon.geom.auth.dao.wrapper.WrappedUserGroupDAO;
 import indi.xezzon.geom.auth.dao.wrapper.WrappedUserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.QUserGroup;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,7 +32,7 @@ public class UserGroupServiceImpl implements UserGroupService {
   public UserGroupServiceImpl(
       WrappedUserGroupDAO userGroupDAO,
       WrappedUserGroupMemberDAO userGroupMemberDAO,
-      @Lazy UserService userService
+      UserService userService
   ) {
     this.userGroupDAO = userGroupDAO;
     this.userGroupMemberDAO = userGroupMemberDAO;
@@ -143,22 +141,5 @@ public class UserGroupServiceImpl implements UserGroupService {
   @Override
   public List<UserGroup> listByUserId(String userId) {
     return userGroupMemberDAO.findAllUserGroupByUserId(userId);
-  }
-
-  @Override
-  public void switchGroup(String groupCode) {
-    /* 前置校验 */
-    StpUtil.checkLogin();
-    /* 执行主流程 */
-    UserGroup userGroup = this.getByCode(groupCode);
-    StpUtil.getTokenSession()
-        .set(SessionConstant.CURRENT_GROUP, userGroup);
-  }
-
-  @Override
-  public UserGroup getCurrentGroup() {
-    StpUtil.checkLogin();
-    return (UserGroup) StpUtil.getTokenSession()
-        .get(SessionConstant.CURRENT_GROUP);
   }
 }

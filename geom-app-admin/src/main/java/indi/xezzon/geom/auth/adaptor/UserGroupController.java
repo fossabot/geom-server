@@ -3,6 +3,7 @@ package indi.xezzon.geom.auth.adaptor;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import indi.xezzon.geom.auth.domain.UserGroup;
+import indi.xezzon.geom.auth.service.AuthService;
 import indi.xezzon.geom.auth.service.UserGroupService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserGroupController {
 
   private final transient UserGroupService userGroupService;
+  private final transient AuthService authService;
 
   @Autowired
-  public UserGroupController(UserGroupService userGroupService) {
+  public UserGroupController(UserGroupService userGroupService, AuthService authService) {
     this.userGroupService = userGroupService;
+    this.authService = authService;
   }
 
   /**
@@ -83,6 +86,6 @@ public class UserGroupController {
    */
   @PutMapping("/{groupCode}/current")
   public void switchGroup(@PathVariable String groupCode) {
-    userGroupService.switchGroup(groupCode);
+    authService.switchGroup(groupCode);
   }
 }

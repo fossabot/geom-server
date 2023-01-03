@@ -3,6 +3,7 @@ package indi.xezzon.geom.auth.adaptor;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import indi.xezzon.geom.auth.domain.query.UpdateCipherQuery;
+import indi.xezzon.geom.auth.service.AuthService;
 import indi.xezzon.geom.auth.service.UserService;
 import indi.xezzon.tao.exception.ClientException;
 import indi.xezzon.tao.logger.LogRecord;
@@ -25,11 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
 
-  private final transient UserService userService;
+  private transient final UserService userService;
+  private transient final AuthService authService;
 
   @Autowired
-  public UserController(UserService userService) {
+  public UserController(UserService userService, AuthService authService) {
     this.userService = userService;
+    this.authService = authService;
   }
 
   /**
@@ -38,7 +41,7 @@ public class UserController {
   @PatchMapping("/cipher")
   @SaCheckLogin
   public void updateCipher(@RequestBody UpdateCipherQuery query) {
-    boolean checked = userService.checkCipher(query.getOldCipher());
+    boolean checked = authService.checkCipher(query.getOldCipher());
     if (!checked) {
       throw new ClientException("密码错误");
     }
