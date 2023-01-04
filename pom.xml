@@ -34,6 +34,22 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- SpringBoot 相关依赖 -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <!-- 一方库 -->
       <dependency>
         <groupId>indi.xezzon</groupId>
         <artifactId>geom-common</artifactId>
@@ -47,8 +63,10 @@
       <!--二方库-->
       <dependency>
         <groupId>indi.xezzon</groupId>
-        <artifactId>tao-spring-boot-starter</artifactId>
-        <version>0.7.0</version>
+        <artifactId>tao-bom</artifactId>
+        <version>0.7.1</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <!--工具类-->
       <dependency>
@@ -104,21 +122,6 @@
         <version>${testcontainers.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-      <!-- SpringBoot 相关依赖 必须放在最后 -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>${spring-cloud.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
       </dependency>
     </dependencies>
   </dependencyManagement>
