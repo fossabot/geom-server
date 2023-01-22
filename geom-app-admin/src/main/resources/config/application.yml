@@ -5,9 +5,9 @@ spring:
     name: geom-admin
   profiles:
     active:
-      - ${SPRING_ENV:dev}
       - ${DB_TYPE:pgsql}
       - ${CACHE_TYPE:in-memory}
+      - ${ENV:prod}
   jackson:
     deserialization:
       FAIL_ON_UNKNOWN_PROPERTIES: false
@@ -25,5 +25,5 @@ logging:
   level:
     root: info
 bean:
-  id-generator: snowflake
-  sa-token-dao: default
+  id-generator: ${BEAN_ID_GENERATOR:snowflake}
+  sa-token-dao: ${BEAN_SA_TOKEN_DAO:default}

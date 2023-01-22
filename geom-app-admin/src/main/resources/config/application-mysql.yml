@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_URL:localhost:3306/geom}
+    url: jdbc:mysql://${DB_URL:localhost:3306/geom}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
