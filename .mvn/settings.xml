@@ -265,7 +265,7 @@ under the License.
         <repository>
           <id>github</id>
           <name>github</name>
-          <url>https://maven.pkg.github.com/xezzon/tao-spring-boot-starter</url>
+          <url>https://maven.pkg.github.com/xezzon/tao</url>
           <releases>
             <enabled>true</enabled>
           </releases>
