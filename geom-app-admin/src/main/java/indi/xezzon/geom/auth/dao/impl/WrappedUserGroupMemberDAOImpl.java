@@ -7,7 +7,7 @@ import indi.xezzon.geom.auth.domain.QUserGroup;
 import indi.xezzon.geom.auth.domain.QUserGroupMember;
 import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.domain.UserGroupMember;
-import indi.xezzon.geom.external.jpa.BaseJpaWrapper;
+import indi.xezzon.tao.jpa.BaseJpaWrapper;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 

@@ -1,12 +1,12 @@
 package indi.xezzon.geom.open.dao.impl;
 
 import com.querydsl.jpa.impl.JPAQuery;
-import indi.xezzon.geom.external.jpa.BaseJpaWrapper;
 import indi.xezzon.geom.open.dao.PublicApiInstanceDAO;
 import indi.xezzon.geom.open.dao.wrapper.WrappedPublicApiInstanceDAO;
 import indi.xezzon.geom.open.domain.PublicApiInstance;
 import indi.xezzon.geom.open.domain.QPublicApi;
 import indi.xezzon.geom.open.domain.QPublicApiInstance;
+import indi.xezzon.tao.jpa.BaseJpaWrapper;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

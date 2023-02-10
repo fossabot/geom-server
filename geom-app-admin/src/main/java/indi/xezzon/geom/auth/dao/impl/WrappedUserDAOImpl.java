@@ -4,7 +4,7 @@ import indi.xezzon.geom.auth.dao.UserDAO;
 import indi.xezzon.geom.auth.dao.wrapper.WrappedUserDAO;
 import indi.xezzon.geom.auth.domain.QUser;
 import indi.xezzon.geom.auth.domain.User;
-import indi.xezzon.geom.external.jpa.BaseJpaWrapper;
+import indi.xezzon.tao.jpa.BaseJpaWrapper;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -1,8 +1,8 @@
 package indi.xezzon.geom.open.dao.wrapper;
 
-import indi.xezzon.geom.external.jpa.JpaWrapper;
 import indi.xezzon.geom.open.dao.PublicApiInstanceDAO;
 import indi.xezzon.geom.open.domain.PublicApiInstance;
+import indi.xezzon.tao.jpa.JpaWrapper;
 import java.util.Collection;
 import java.util.List;
 

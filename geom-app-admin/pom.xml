@@ -45,6 +45,10 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+    <groupId>indi.xezzon</groupId>
+    <artifactId>tao-addon-jpa</artifactId>
+  </dependency>
+    <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <optional>true</optional>

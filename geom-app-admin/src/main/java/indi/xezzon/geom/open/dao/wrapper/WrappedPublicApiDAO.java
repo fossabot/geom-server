@@ -1,8 +1,8 @@
 package indi.xezzon.geom.open.dao.wrapper;
 
-import indi.xezzon.geom.external.jpa.JpaWrapper;
 import indi.xezzon.geom.open.dao.PublicApiDAO;
 import indi.xezzon.geom.open.domain.PublicApi;
+import indi.xezzon.tao.jpa.JpaWrapper;
 import indi.xezzon.tao.retrieval.CommonQuery;
 import org.springframework.data.domain.Page;
 

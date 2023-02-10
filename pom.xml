@@ -64,9 +64,14 @@
       <dependency>
         <groupId>indi.xezzon</groupId>
         <artifactId>tao-bom</artifactId>
-        <version>0.7.2</version>
+        <version>0.7.3</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>indi.xezzon</groupId>
+        <artifactId>tao-addon-jpa</artifactId>
+        <version>0.1.0</version>
       </dependency>
       <!--工具类-->
       <dependency>

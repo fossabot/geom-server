@@ -4,7 +4,7 @@ import com.querydsl.core.types.Predicate;
 import indi.xezzon.geom.auth.dao.UserGroupMemberDAO;
 import indi.xezzon.geom.auth.domain.UserGroup;
 import indi.xezzon.geom.auth.domain.UserGroupMember;
-import indi.xezzon.geom.external.jpa.JpaWrapper;
+import indi.xezzon.tao.jpa.JpaWrapper;
 import java.util.List;
 
 public interface WrappedUserGroupMemberDAO
