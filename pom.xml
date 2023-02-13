@@ -3,7 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>indi.xezzon</groupId>
+  <groupId>io.github.xezzon</groupId>
   <artifactId>geom</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -51,27 +51,27 @@
       </dependency>
       <!-- 一方库 -->
       <dependency>
-        <groupId>indi.xezzon</groupId>
+        <groupId>io.github.xezzon</groupId>
         <artifactId>geom-common</artifactId>
-        <version>${project.version}</version>
+        <version>1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>indi.xezzon</groupId>
+        <groupId>io.github.xezzon</groupId>
         <artifactId>geom-app-admin</artifactId>
-        <version>${project.version}</version>
+        <version>1.0-SNAPSHOT</version>
       </dependency>
       <!--二方库-->
       <dependency>
-        <groupId>indi.xezzon</groupId>
+        <groupId>io.github.xezzon</groupId>
         <artifactId>tao-bom</artifactId>
-        <version>0.7.3</version>
+        <version>0.8.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>indi.xezzon</groupId>
+        <groupId>io.github.xezzon</groupId>
         <artifactId>tao-addon-jpa</artifactId>
-        <version>0.1.0</version>
+        <version>0.2.0</version>
       </dependency>
       <!--工具类-->
       <dependency>

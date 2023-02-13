@@ -130,11 +130,6 @@ under the License.
       <passphrase>optional; leave empty if not used.</passphrase>
     </server>
     -->
-    <server>
-      <id>github</id>
-      <username>xezzon</username>
-      <password>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</password>
-    </server>
   </servers>
 
   <!-- mirrors
@@ -256,25 +251,6 @@ under the License.
       </properties>
     </profile>
     -->
-    <profile>
-      <id>Repository Proxy</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <repositories>
-        <repository>
-          <id>github</id>
-          <name>github</name>
-          <url>https://maven.pkg.github.com/xezzon/tao</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
-    </profile>
   </profiles>
 
   <!-- activeProfiles

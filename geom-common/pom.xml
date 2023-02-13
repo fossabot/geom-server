@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>geom</artifactId>
-    <groupId>indi.xezzon</groupId>
+    <groupId>io.github.xezzon</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>geom-common</artifactId>
@@ -19,7 +19,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>indi.xezzon</groupId>
+      <groupId>io.github.xezzon</groupId>
       <artifactId>tao-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
