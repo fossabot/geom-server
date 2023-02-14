@@ -1,7 +1,10 @@
 package io.github.xezzon.geom.dict.adaptor;
 
+import io.github.xezzon.geom.dict.domain.Dict;
 import io.github.xezzon.geom.dict.service.DictService;
+import java.util.List;
 import javax.annotation.Resource;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,4 +17,9 @@ public class DictController {
 
   @Resource
   private transient DictService dictService;
+
+  @GetMapping("/tags")
+  public List<Dict> listTags() {
+    return dictService.listTag();
+  }
 }

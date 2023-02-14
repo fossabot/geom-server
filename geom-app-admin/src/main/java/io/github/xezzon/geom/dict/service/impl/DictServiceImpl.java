@@ -20,12 +20,12 @@ public class DictServiceImpl implements DictService {
 
   @Override
   public List<Dict> findByTag(String tag) {
-    return null;
+    return dictDAO.get().findByTag(tag);
   }
 
   @Override
   public List<Dict> listTag() {
-    return null;
+    return this.findByTag("tags");
   }
 
   @Override
