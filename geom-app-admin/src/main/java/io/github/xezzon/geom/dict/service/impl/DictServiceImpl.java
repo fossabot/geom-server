@@ -3,6 +3,8 @@ package io.github.xezzon.geom.dict.service.impl;
 import io.github.xezzon.geom.dict.dao.wrapper.WrappedDictDAO;
 import io.github.xezzon.geom.dict.domain.Dict;
 import io.github.xezzon.geom.dict.service.DictService;
+import io.github.xezzon.tao.domain.TreeNode;
+import io.github.xezzon.tao.exception.ClientException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +31,13 @@ public class DictServiceImpl implements DictService {
   }
 
   @Override
-  public List<Dict> list(String tag) {
-    return null;
+  public List<Dict> list(String tagCode) {
+    Dict tag = dictDAO.get()
+        .findByTagAndCode("tags", tagCode);
+    if (tag == null) {
+      throw new ClientException("字典不存在");
+    }
+    return TreeNode.nest(tag.getId(), -1, dictDAO.get()::findByParentIdIn);
   }
 
   @Override

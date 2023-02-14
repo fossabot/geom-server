@@ -5,6 +5,7 @@ import io.github.xezzon.geom.dict.service.DictService;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,10 @@ public class DictController {
   @GetMapping("/tags")
   public List<Dict> listTags() {
     return dictService.listTag();
+  }
+
+  @GetMapping("/{tag}")
+  public List<Dict> list(@PathVariable String tag) {
+    return dictService.list(tag);
   }
 }
