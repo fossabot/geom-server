@@ -8,6 +8,7 @@ import io.github.xezzon.geom.core.manager.HibernateIdGenerator;
 import io.github.xezzon.tao.dict.IDict;
 import io.github.xezzon.tao.domain.TreeNode;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -54,10 +56,12 @@ public class Dict implements IDict, TreeNode<Dict, String> {
    * 字典目
    */
   @Column(name = TAG, nullable = false, updatable = false)
+  @NotNull(message = "字典目不能为空")
   private String tag;
   /**
    * 字典值
    */
+  @NotNull(message = "字典编码不能为空")
   @Column(name = CODE, nullable = false)
   private String code;
   /**
@@ -80,5 +84,22 @@ public class Dict implements IDict, TreeNode<Dict, String> {
 
   public int getOrdinal() {
     return Optional.ofNullable(ordinal).orElse(0);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Dict dict = (Dict) o;
+    return Objects.equals(id, dict.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
   }
 }

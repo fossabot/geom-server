@@ -42,7 +42,11 @@ public class DictServiceImpl implements DictService {
 
   @Override
   public void add(Dict dict) {
-
+    Dict entity = dictDAO.get().findByTagAndCode(dict.getTag(), dict.getCode());
+    if (entity != null) {
+      throw new ClientException("字典编码已存在");
+    }
+    dictDAO.get().save(dict);
   }
 
   @Override
