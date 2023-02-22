@@ -99,23 +99,12 @@
         <configuration>
           <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
           <image>
-            <name>xezzo-docker.pkg.coding.net/geom/library/${project.artifactId}:${project.version}</name>
-            <publish>true</publish>
             <pullPolicy>IF_NOT_PRESENT</pullPolicy>
-            <env>
-            </env>
+            <buildpacks>
+              <buildpack>paketobuildpacks/microsoft-openjdk</buildpack>
+              <buildpack>urn:cnb:builder:paketo-buildpacks/java</buildpack>
+            </buildpacks>
           </image>
-          <docker>
-            <builderRegistry>
-              <url>https://mirror.ccs.tencentyun.com</url>
-              <username>${env.CODING_ARTIFACTS_USERNAME}</username>
-              <password>${env.CODING_ARTIFACTS_PASSWORD}</password>
-            </builderRegistry>
-            <publishRegistry>
-              <username>${env.CODING_ARTIFACTS_USERNAME}</username>
-              <password>${env.CODING_ARTIFACTS_PASSWORD}</password>
-            </publishRegistry>
-          </docker>
         </configuration>
         <executions>
           <execution>
@@ -123,8 +112,6 @@
             <goals>
               <goal>build-image</goal>
             </goals>
-            <configuration>
-            </configuration>
           </execution>
         </executions>
       </plugin>
