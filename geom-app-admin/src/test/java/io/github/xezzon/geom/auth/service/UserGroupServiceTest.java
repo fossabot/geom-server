@@ -11,8 +11,8 @@ import io.github.xezzon.geom.auth.domain.dataset.UserTestDataset;
 import io.github.xezzon.tao.exception.ClientException;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
+import jakarta.annotation.Resource;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class UserGroupServiceTest {
         .setCode(RandomUtil.randomString(6))
         .setName(RandomUtil.randomString(6));
     userGroupService.insert(userGroup);
-    UserGroup userGroup1 = userGroupDAO.getById(userGroup.getId());
+    UserGroup userGroup1 = userGroupDAO.getReferenceById(userGroup.getId());
     Assertions.assertNotNull(userGroup1);
   }
 

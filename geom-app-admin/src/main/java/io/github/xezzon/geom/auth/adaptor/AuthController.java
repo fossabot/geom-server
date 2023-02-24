@@ -10,7 +10,7 @@ import io.github.xezzon.geom.auth.domain.convert.UserConvert;
 import io.github.xezzon.geom.auth.service.AuthService;
 import io.github.xezzon.geom.auth.service.UserService;
 import io.github.xezzon.tao.logger.LogRecord;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

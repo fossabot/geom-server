@@ -7,7 +7,7 @@ import io.github.xezzon.geom.auth.domain.User;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

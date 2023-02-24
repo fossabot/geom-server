@@ -3,7 +3,7 @@ package io.github.xezzon.geom.core.manager;
 import io.github.xezzon.tao.exception.ThirdPartyException;
 import io.github.xezzon.tao.manager.IdGenerator;
 import io.github.xezzon.geom.core.constant.SpringConstants;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;

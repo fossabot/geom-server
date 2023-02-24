@@ -1,7 +1,7 @@
 package io.github.xezzon.geom.core.domain;
 
 import java.util.Collection;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

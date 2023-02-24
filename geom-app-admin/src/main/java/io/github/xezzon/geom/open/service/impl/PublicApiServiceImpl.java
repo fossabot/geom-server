@@ -50,7 +50,7 @@ public class PublicApiServiceImpl implements PublicApiService {
 
   @Override
   public @Nullable PublicApi getById(String apiId) {
-    return publicApiDAO.get().getById(apiId);
+    return publicApiDAO.get().getReferenceById(apiId);
   }
 
   @Override

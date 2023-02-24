@@ -12,7 +12,7 @@ import io.github.xezzon.tao.exception.BaseException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -65,7 +65,7 @@ class AuthServiceTest {
   }
 
   @Test
-  @javax.transaction.Transactional
+  @jakarta.transaction.Transactional
   void checkCipher() {
     /* 正常流程 */
     StpUtil.login(currentUser.getId());
