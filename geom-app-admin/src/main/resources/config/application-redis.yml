@@ -10,6 +10,7 @@ spring:
           max-idle: 8
           min-idle: 0
       timeout: 3000ms
-bean:
-  id-generator: ${BEAN_ID_GENERATOR:redis}
-  sa-token-dao: ${BEAN_SA_TOKEN_DAO:redis}
+geom:
+  system:
+    id-generator: ${ID_GENERATOR:redis}
+    sa-token-dao: ${SA_TOKEN_DAO:redis}

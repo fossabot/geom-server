@@ -24,6 +24,7 @@ sa-token:
 logging:
   level:
     root: info
-bean:
-  id-generator: ${BEAN_ID_GENERATOR:snowflake}
-  sa-token-dao: ${BEAN_SA_TOKEN_DAO:default}
+geom:
+  system:
+    id-generator: ${ID_GENERATOR:snowflake}
+    sa-token-dao: ${SA_TOKEN_DAO:default}
