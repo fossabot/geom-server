@@ -5,14 +5,14 @@ import static io.github.xezzon.geom.auth.domain.UserGroupMember.USER_ID;
 
 import io.github.xezzon.geom.core.constant.DatabaseConstant;
 import io.github.xezzon.geom.core.manager.HibernateIdGenerator;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -87,14 +87,5 @@ public class UserGroupMember {
   @Override
   public int hashCode() {
     return Objects.hash(groupId, userId);
-  }
-
-  /**
-   * 用户组成员主键
-   */
-  public static class UserGroupMemberId {
-
-    private String groupId;
-    private String userId;
   }
 }

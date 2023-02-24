@@ -16,7 +16,7 @@ import io.github.xezzon.tao.observer.ObserverContext;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 /**
