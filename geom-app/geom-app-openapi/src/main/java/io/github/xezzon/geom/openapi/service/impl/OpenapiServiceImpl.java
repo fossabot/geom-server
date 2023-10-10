@@ -1,5 +1,6 @@
 package io.github.xezzon.geom.openapi.service.impl;
 
+import io.github.xezzon.geom.openapi.domain.Openapi;
 import io.github.xezzon.geom.openapi.repository.wrapper.OpenapiDAO;
 import io.github.xezzon.geom.openapi.repository.wrapper.OpenapiInstanceDAO;
 import io.github.xezzon.geom.openapi.service.OpenapiService;
@@ -17,5 +18,10 @@ public class OpenapiServiceImpl implements OpenapiService {
   public OpenapiServiceImpl(OpenapiDAO openapiDAO, OpenapiInstanceDAO openapiInstanceDAO) {
     this.openapiDAO = openapiDAO;
     this.openapiInstanceDAO = openapiInstanceDAO;
+  }
+
+  @Override
+  public void addOpenapi(Openapi openapi) {
+    openapiDAO.get().save(openapi);
   }
 }

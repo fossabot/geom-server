@@ -36,4 +36,7 @@ public class Openapi extends BaseEntity<String> {
   @GenericGenerator(name = GENERATOR_NAME, type = HibernateIdGenerator.class)
   @GeneratedValue(generator = GENERATOR_NAME)
   private String id;
+
+  @Column()
+  private String name;
 }
