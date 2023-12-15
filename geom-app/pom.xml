@@ -23,7 +23,7 @@
     <!-- 应用端口号 -->
     <app.port>8080</app.port>
     <!-- JavaAgent 存放路径 -->
-    <agent-extraction-root>${project.build.directory}/java-agents</agent-extraction-root>
+    <agent-extraction-root>${maven.multiModuleProjectDirectory}/java-agents</agent-extraction-root>
     <!-- JavaAgent 在Docker中的路径 -->
     <agent-path>/opt/agent</agent-path>
     <!-- JavaAgent 名称 -->
@@ -239,25 +239,6 @@
                 <goals>
                   <goal>build</goal>
                 </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>com.googlecode.maven-download-plugin</groupId>
-            <artifactId>download-maven-plugin</artifactId>
-            <version>${download-maven-plugin.version}</version>
-            <executions>
-              <execution>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>wget</goal>
-                </goals>
-                <configuration>
-                  <url>https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar</url>
-                  <outputDirectory>${agent-extraction-root}</outputDirectory>
-                  <outputFileName>${opentelemetry-javaagent.name}</outputFileName>
-                  <readTimeOut>30000</readTimeOut>
-                </configuration>
               </execution>
             </executions>
           </plugin>
